@@ -22,7 +22,7 @@ import java.util.Properties;
 public class CallbackImpl implements Callback {
     //-- Enums
     private enum Category {
-        video, project
+        VIDEO, PROJECT
     }
 
     //-- Attributes
@@ -62,7 +62,7 @@ public class CallbackImpl implements Callback {
         params.put("event", "project-created");
         params.put("id", id);
         params.put("hashed_id", project.getHashedId());
-        post(id, params, Category.project);
+        post(id, params, Category.PROJECT);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class CallbackImpl implements Callback {
         params.put("event", "video-uploaded");
         params.put("id", id);
         params.put("hashed_id", video.getHashedId());
-        post(id, params, Category.video);
+        post(id, params, Category.VIDEO);
     }
 
     //-- Private
@@ -90,7 +90,7 @@ public class CallbackImpl implements Callback {
     }
 
     private void onError (String id, Map<String, String> params, Category category){
-        String filename = String.format("%d-%s-%s", clock.millis(), category.name(), id);
+        String filename = String.format("%d-%s-%s", clock.millis(), category.name().toLowerCase(), id);
         File file = new File(errorDir, filename);
 
         file.getParentFile().mkdirs();

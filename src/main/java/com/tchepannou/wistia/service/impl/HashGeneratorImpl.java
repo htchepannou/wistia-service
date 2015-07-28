@@ -13,6 +13,6 @@ public class HashGeneratorImpl implements HashGenerator {
                 .on("")
                 .skipNulls()
                 .join(values);
-        return DigestUtils.md5DigestAsHex(((str + "-" + apiKey).getBytes()));
+        return DigestUtils.md5DigestAsHex((str + "-" + apiKey).getBytes());
     }
 }
