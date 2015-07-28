@@ -1,5 +1,6 @@
 package com.tchepannou.wistia.dto;
 
+@Deprecated
 public class GreetingDto {
     private final long id;
     private final String content;

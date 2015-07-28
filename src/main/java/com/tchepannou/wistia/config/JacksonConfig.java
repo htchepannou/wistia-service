@@ -12,7 +12,7 @@ public class JacksonConfig {
     @Bean
     public Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder() {
         return new Jackson2ObjectMapperBuilder()
-                .simpleDateFormat("yyyy-MM-dd HH:mm:ss Z")
+                .simpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
                 .serializationInclusion(JsonInclude.Include.NON_NULL)
                 .modules(
                         new Jdk8Module(),

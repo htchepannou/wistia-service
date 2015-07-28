@@ -1,9 +1,14 @@
 package com.tchepannou.wistia.config;
 
+import com.tchepannou.wistia.service.*;
+import com.tchepannou.wistia.service.impl.CallbackImpl;
+import com.tchepannou.wistia.service.impl.HashGeneratorImpl;
+import com.tchepannou.wistia.service.impl.HttpImpl;
+import com.tchepannou.wistia.service.impl.WistiaClientImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.tchepannou.wistia.service.GreetingService;
-import com.tchepannou.wistia.service.impl.GreetingServiceImpl;
+
+import java.time.Clock;
 
 /**
  * Declare your services here!
@@ -11,7 +16,27 @@ import com.tchepannou.wistia.service.impl.GreetingServiceImpl;
 @Configuration
 public class AppConfig {
     @Bean
-    GreetingService greetingService (){
-        return new GreetingServiceImpl();
+    public Callback callback (){
+        return new CallbackImpl();
+    }
+
+    @Bean
+    public WistiaClient wistiaClient (){
+        return new WistiaClientImpl();
+    }
+
+    @Bean
+    public Http http () {
+        return new HttpImpl();
+    }
+
+    @Bean
+    public HashGenerator hashGenerator (){
+        return new HashGeneratorImpl();
+    }
+
+    @Bean
+    public Clock clock (){
+        return Clock.systemUTC();
     }
 }

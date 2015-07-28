@@ -4,7 +4,7 @@
 # Usage: ./install.sh
 #
 
-SERVICE_NAME=__artifactId__
+SERVICE_NAME=wistia-service
 
 # Install application
 if [ ! -d "/opt/$SERVICE_NAME" ]; then
