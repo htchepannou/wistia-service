@@ -1,5 +1,7 @@
 package com.tchepannou.wistia;
 
+import com.tchepannou.wistia.dto.CreateProjectRequest;
+import com.tchepannou.wistia.dto.UploadVideoRequest;
 import com.tchepannou.wistia.model.Project;
 import com.tchepannou.wistia.model.Thumbnail;
 import com.tchepannou.wistia.model.Video;
@@ -8,7 +10,7 @@ import org.apache.commons.lang.time.DateUtils;
 import java.util.Date;
 
 public class Fixtures {
-    public static Video createVideo (){
+    public static Video newVideo(){
         Thumbnail thumbnail = new Thumbnail();
         thumbnail.setHeight(100);
         thumbnail.setWidth(200);
@@ -27,7 +29,7 @@ public class Fixtures {
         return video;
     }
 
-    public static Project createProject (){
+    public static Project newProject(){
         Project obj = new Project();
         obj.setId(12);
         obj.setName("foo");
@@ -38,6 +40,21 @@ public class Fixtures {
         obj.setMediaCount(12);
         obj.setCreated(new Date());
         obj.setUpdated(DateUtils.addDays(new Date(), -2));
+        return obj;
+    }
+
+    public static CreateProjectRequest  newCreateProjectRequest(){
+        CreateProjectRequest obj = new CreateProjectRequest();
+        obj.setName("foo");
+        obj.setId("11");
+        return obj;
+    }
+
+    public static UploadVideoRequest newUploadVideoRequest (){
+        UploadVideoRequest obj = new UploadVideoRequest();
+        obj.setId("32");
+        obj.setUrl("http://fdlkd.com");
+        obj.setProjectHashId("1221");
         return obj;
     }
 }

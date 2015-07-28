@@ -33,7 +33,7 @@ public class WistiaClientImplTest {
     @Test
     public void testCreateProject() throws Exception {
         // Given
-        final Project expected = Fixtures.createProject();
+        final Project expected = Fixtures.newProject();
         when(http.post(anyString(), anyMap(), any(Class.class))).thenReturn(expected);
 
         // When
@@ -65,7 +65,7 @@ public class WistiaClientImplTest {
     @Test
     public void testUpload() throws Exception {
         // Given
-        final Video expected = Fixtures.createVideo();
+        final Video expected = Fixtures.newVideo();
         when(http.post(anyString(), anyMap(), any(Class.class))).thenReturn(expected);
 
         // When

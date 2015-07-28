@@ -51,7 +51,7 @@ public class CallbackImplTest {
     @Test
     public void testProjectCreated() throws Exception {
         // Given
-        final Project project = Fixtures.createProject();
+        final Project project = Fixtures.newProject();
 
         when(http.post(anyString(), anyMap(), any(Class.class))).thenReturn("OK");
 
@@ -81,7 +81,7 @@ public class CallbackImplTest {
     @Test
     public void testProjectCreated_httpError() throws Exception {
         // Given
-        final Project project = Fixtures.createProject();
+        final Project project = Fixtures.newProject();
 
         when(http.post(anyString(), anyMap(), any(Class.class))).thenThrow(IOException.class);
 
@@ -111,7 +111,7 @@ public class CallbackImplTest {
     @Test
     public void testVideoUploaded() throws Exception {
         // Given
-        final Video video = Fixtures.createVideo();
+        final Video video = Fixtures.newVideo();
 
         when(http.post(anyString(), anyMap(), any(Class.class))).thenReturn("OK");
 
@@ -142,7 +142,7 @@ public class CallbackImplTest {
     @Test
     public void testVideoUploaded_httpError() throws Exception {
         // Given
-        final Video video = Fixtures.createVideo();
+        final Video video = Fixtures.newVideo();
 
         when(http.post(anyString(), anyMap(), any(Class.class))).thenThrow(IOException.class);
 
