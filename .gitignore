@@ -1,0 +1,45 @@
+# Java
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Mac
+.DS_Store
+
+# Maven
+log/
+target/
+
+# Other stuff
+logs/
+**/minifiedCss/
+**/rawCss/
+DPS-calls/
+*_ActivityLog_Request.xml
+*_AirSearch_Response.xml
+*_PackageSearch_Response.xml
+
+#ignoring JMeter result and log files
+**/performance/jmeter.log
+**/performance/jmxcsvresults/
+exposurelogs/
