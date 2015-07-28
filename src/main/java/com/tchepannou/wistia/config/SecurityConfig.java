@@ -7,8 +7,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -51,9 +49,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(authenticationEntryPoint())
                 */
         ;
-
-        configureAuthentication(http);
-        configureAuthorization(http);
     }
 
 
@@ -78,25 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return registrationBean;
     }
 
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint() {
-        return new AuthenticationEntryPoint() {
-            @Override public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e)
-                    throws IOException, ServletException {
-
-            }
-        };
-    }
-
     //-- Protected
-    protected void configureAuthentication(final HttpSecurity http) {
-
-    }
-
-    protected void configureAuthorization(final HttpSecurity http) {
-
-    }
-
     protected String[] getActuatorEndpoints(){
         return ACTUATOR_ENDPOINTS;
     }
