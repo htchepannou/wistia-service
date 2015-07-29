@@ -1,12 +1,19 @@
 #!/bin/sh
 
-SERVICE_PREFIX=wistia
-SERVICE_NAME="$SERVICE_PREFIX-service"
+#
+# Usage: ./install.sh
+#
+
+SERVICE_NAME=wistia-service
 SERVICE_VERSION="1.0"
 SERVICE_PROFILE=test
 
-# Copy the jar from S3
-aws s3 cp s3://maven.com.tchepannou/release/com/tchepannou/$SERVICE_PREFIX/$SERVICE_NAME/$SERVICE_VERSION/$SERVICE_NAME-1.0-exec.jar $SERVICE_NAME-exec.jar
+# Get from maven repo
+rm -f $SERVICE_NAME-*.jar
+wget https://s3-us-west-2.amazonaws.com/maven.com.tchepannou/release/com/tchepannou/wistia/wistia-service/$SERVICE_VERSION/$SERVICE_NAME-$SERVICE_VERSION-exec.jar
+
+# Create user
+id -u webapp &>/dev/null || useradd webapp
 
 # Install application
 if [ ! -d "/opt/$SERVICE_NAME" ]; then
@@ -17,6 +24,7 @@ if [ ! -d "/opt/$SERVICE_NAME/log" ]; then
   mkdir /opt/$SERVICE_NAME/log
 fi
 
+
 # startup script
 cat initd.sh |  sed -e "s/__ACTIVE_PROFILE__/$SERVICE_PROFILE/" > /etc/init.d/$SERVICE_NAME
 chmod +x /etc/init.d/$SERVICE_NAME
@@ -25,6 +33,10 @@ chmod +x /etc/init.d/$SERVICE_NAME
 /sbin/chkconfig $SERVICE_NAME on
 
 # application
-cp $SERVICE_NAME-exec.jar /opt/$SERVICE_NAME/.
+cp $SERVICE_NAME-$SERVICE_VERSION-exec.jar /opt/$SERVICE_NAME/$SERVICE_NAME-exec.jar
 
-/etc/init.d/$SERVICE_NAME restart
+# permission
+chown -R webapp:webapp /opt/$SERVICE_NAME
+
+/etc/init.d/$SERVICE_NAME stop
+/etc/init.d/$SERVICE_NAME start
