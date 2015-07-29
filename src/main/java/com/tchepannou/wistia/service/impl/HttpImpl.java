@@ -71,7 +71,6 @@ public class HttpImpl implements Http {
                 }
 
                 return jackson.build().readValue(response.getEntity().getContent(), type);
-
             }
         }
     }

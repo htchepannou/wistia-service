@@ -82,7 +82,7 @@ public class CallbackImpl implements Callback {
             params.put("x-hash", hash);
 
             http.postJson(callbackUrl, params, String.class);
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOG.error("\n---------------------\nPOST {}\n{}\n", callbackUrl, params, e);
 
             onError(id, params, category);
