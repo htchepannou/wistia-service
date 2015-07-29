@@ -1,5 +1,6 @@
 package com.tchepannou.wistia.model;
 
+import javax.xml.bind.annotation.XmlElement;
 import java.util.Date;
 
 public class Project {
@@ -7,6 +8,8 @@ public class Project {
     private long id;
     private String name;
     private long mediaCount;
+
+    @XmlElement(name = "hashed_id")
     private String hashedId;
     private boolean anonymousCanUpload;
     private boolean anonymousCanDownload;

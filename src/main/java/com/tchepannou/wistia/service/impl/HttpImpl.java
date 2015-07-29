@@ -12,12 +12,15 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -70,8 +73,17 @@ public class HttpImpl implements Http {
                     throw new IOException(response.getStatusLine().toString());
                 }
 
-                return jackson.build().readValue(response.getEntity().getContent(), type);
+                String json = toString(response.getEntity().getContent());
+                LOG.info(json);
+                return jackson.build().readValue(json, type);
             }
+        }
+    }
+
+    private String toString(InputStream in) throws IOException{
+        try(ByteArrayOutputStream out = new ByteArrayOutputStream()){
+            IOUtils.copy(in, out);
+            return out.toString("utf-8");
         }
     }
 }

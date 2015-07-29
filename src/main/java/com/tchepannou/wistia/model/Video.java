@@ -1,5 +1,6 @@
 package com.tchepannou.wistia.model;
 
+import javax.xml.bind.annotation.XmlElement;
 import java.util.Date;
 
 public class Video {
@@ -8,6 +9,8 @@ public class Video {
     private String name;
     private String type;
     private double duration;
+
+    @XmlElement(name = "hashed_id")
     private String hashedId;
     private double progress;
     private Date created;
