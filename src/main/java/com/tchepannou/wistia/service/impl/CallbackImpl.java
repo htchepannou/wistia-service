@@ -1,5 +1,6 @@
 package com.tchepannou.wistia.service.impl;
 
+import com.tchepannou.wistia.dto.CallbackResponse;
 import com.tchepannou.wistia.model.Project;
 import com.tchepannou.wistia.model.Video;
 import com.tchepannou.wistia.service.Callback;
@@ -81,7 +82,7 @@ public class CallbackImpl implements Callback {
             params.put("x-timestamp", String.valueOf(clock.millis()));
             params.put("x-hash", hash);
 
-            http.postJson(callbackUrl, params, String.class);
+            http.postJson(callbackUrl, params, CallbackResponse.class);
         } catch (Exception e) {
             LOG.error("FAIL POST {} - {}", callbackUrl, params, e);
 

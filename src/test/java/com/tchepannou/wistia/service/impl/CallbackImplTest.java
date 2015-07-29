@@ -2,6 +2,7 @@ package com.tchepannou.wistia.service.impl;
 
 import com.google.common.io.Files;
 import com.tchepannou.wistia.Fixtures;
+import com.tchepannou.wistia.dto.CallbackResponse;
 import com.tchepannou.wistia.model.Project;
 import com.tchepannou.wistia.model.Video;
 import com.tchepannou.wistia.service.Callback;
@@ -53,7 +54,7 @@ public class CallbackImplTest {
         // Given
         final Project project = Fixtures.newProject();
 
-        when(http.post(anyString(), anyMap(), any(Class.class))).thenReturn("OK");
+        when(http.post(anyString(), anyMap(), any(Class.class))).thenReturn(new CallbackResponse("IGNORED"));
 
         when(hash.generate(anyString(), anyCollection())).thenReturn("this-is-the-hash");
 
@@ -68,7 +69,7 @@ public class CallbackImplTest {
 
         verify(http).postJson(url.capture(), params.capture(), type.capture());
         assertThat(url.getValue()).isEqualTo(callbackUrl);
-        assertThat(type.getValue()).isEqualTo(String.class);
+        assertThat(type.getValue()).isEqualTo(CallbackResponse.class);
         assertThat(params.getValue()).containsExactly(
                 MapEntry.entry("event", "project-created"),
                 MapEntry.entry("id", "123"),
@@ -113,7 +114,7 @@ public class CallbackImplTest {
         // Given
         final Video video = Fixtures.newVideo();
 
-        when(http.post(anyString(), anyMap(), any(Class.class))).thenReturn("OK");
+        when(http.post(anyString(), anyMap(), any(Class.class))).thenReturn(new CallbackResponse("OK"));
 
         when(hash.generate(anyString(), anyCollection())).thenReturn("this-is-the-hash");
 
@@ -128,7 +129,7 @@ public class CallbackImplTest {
 
         verify(http).postJson(url.capture(), params.capture(), type.capture());
         assertThat(url.getValue()).isEqualTo(callbackUrl);
-        assertThat(type.getValue()).isEqualTo(String.class);
+        assertThat(type.getValue()).isEqualTo(CallbackResponse.class);
         assertThat(params.getValue()).containsExactly(
                 MapEntry.entry("event", "video-uploaded"),
                 MapEntry.entry("id", "123"),
