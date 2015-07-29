@@ -66,7 +66,7 @@ public class CallbackImplTest {
         final ArgumentCaptor<Map> params = ArgumentCaptor.forClass(Map.class);
         final ArgumentCaptor<Class> type = ArgumentCaptor.forClass(Class.class);
 
-        verify(http).post(url.capture(), params.capture(), type.capture());
+        verify(http).postJson(url.capture(), params.capture(), type.capture());
         assertThat(url.getValue()).isEqualTo(callbackUrl);
         assertThat(type.getValue()).isEqualTo(String.class);
         assertThat(params.getValue()).containsExactly(
@@ -83,7 +83,7 @@ public class CallbackImplTest {
         // Given
         final Project project = Fixtures.newProject();
 
-        when(http.post(anyString(), anyMap(), any(Class.class))).thenThrow(IOException.class);
+        when(http.postJson(anyString(), anyMap(), any(Class.class))).thenThrow(IOException.class);
 
         when(hash.generate(anyString(), anyCollection())).thenReturn("this-is-the-hash");
 
@@ -126,7 +126,7 @@ public class CallbackImplTest {
         final ArgumentCaptor<Map> params = ArgumentCaptor.forClass(Map.class);
         final ArgumentCaptor<Class> type = ArgumentCaptor.forClass(Class.class);
 
-        verify(http).post(url.capture(), params.capture(), type.capture());
+        verify(http).postJson(url.capture(), params.capture(), type.capture());
         assertThat(url.getValue()).isEqualTo(callbackUrl);
         assertThat(type.getValue()).isEqualTo(String.class);
         assertThat(params.getValue()).containsExactly(
@@ -144,7 +144,7 @@ public class CallbackImplTest {
         // Given
         final Video video = Fixtures.newVideo();
 
-        when(http.post(anyString(), anyMap(), any(Class.class))).thenThrow(IOException.class);
+        when(http.postJson(anyString(), anyMap(), any(Class.class))).thenThrow(IOException.class);
 
         when(hash.generate(anyString(), anyCollection())).thenReturn("this-is-the-hash");
 

@@ -81,7 +81,7 @@ public class CallbackImpl implements Callback {
             params.put("x-timestamp", String.valueOf(clock.millis()));
             params.put("x-hash", hash);
 
-            http.post(callbackUrl, params, String.class);
+            http.postJson(callbackUrl, params, String.class);
         } catch (IOException e) {
             LOG.error("\n---------------------\nPOST {}\n{}\n", callbackUrl, params, e);
 
