@@ -10,7 +10,7 @@ SERVICE_PROFILE=test
 
 # Get from maven repo
 rm -f $SERVICE_NAME-*.jar
-wget https://s3-us-west-2.amazonaws.com/maven.com.tchepannou/release/com/tchepannou/wistia/is-wistia-service/$SERVICE_VERSION/$SERVICE_NAME-$SERVICE_VERSION-exec.jar
+wget https://s3-us-west-2.amazonaws.com/maven.com.tchepannou/release/com/tchepannou/wistia/wistia-service/$SERVICE_VERSION/$SERVICE_NAME-$SERVICE_VERSION-exec.jar
 
 # Create user
 id -u webapp &>/dev/null || useradd webapp

@@ -1,11 +1,12 @@
 package com.tchepannou.wistia.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tchepannou.wistia.service.Http;
-import org.apache.http.Consts;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
@@ -34,10 +35,12 @@ public class HttpImpl implements Http {
                 .collect(Collectors.toList())
                 ;
 
+        ObjectMapper mapper = jackson.build();
+        String json = mapper.writeValueAsString(params);
+
         HttpPost request = new HttpPost(url);
-        request.setEntity(new UrlEncodedFormEntity(nvps, Consts.UTF_8));
+        request.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
         request.addHeader("Accept", "application/json");
-        request.addHeader("Content-Type", "application/x-www-form-urlencoded");
 
         LOG.info("POST " + url + "\n" + nvps);
         try (final CloseableHttpClient client = HttpClients.createDefault()) {

@@ -1,42 +1,49 @@
-#!/bin/sh
-
+#!/bin/bash
 #
-# Usage: ./install.sh
+# Startup script for a spring boot project
 #
+# chkconfig: - 84 16
+# description: spring boot project
 
 SERVICE_NAME=wistia-service
-SERVICE_VERSION="1.0"
-SERVICE_PROFILE=test
+ACTIVE_PROFILE=__ACTIVE_PROFILE__
 
-# Get from maven repo
-rm -f $SERVICE_NAME-*.jar
-wget https://s3-us-west-2.amazonaws.com/maven.com.tchepannou/release/com/tchepannou/wistia/wistia-service/$SERVICE_VERSION/$SERVICE_NAME-$SERVICE_VERSION-exec.jar
+SERVICE_DIR=/opt/$SERVICE_NAME
+PATH_TO_JAR=$SERVICE_DIR/$SERVICE_NAME-exec.jar
+PID_PATH_NAME=$SERVICE_DIR/$SERVICE_NAME.pid
+LOG_FILE=$SERVICE_DIR/log/$SERVICE_NAME.log
+SERVICE_USER=webapp
 
-# Create user
-id -u webapp &>/dev/null || useradd webapp
+case $1 in
+    start)
+        echo "Starting $SERVICE_NAME ..."
+        if [ ! -f $PID_PATH_NAME ]; then
+            JAVA_OPTS="--Xms256m -Xmx256m --spring.profiles.active=$ACTIVE_PROFILE --logging.file=$LOG_FILE --spring.pidfile=$PID_PATH_NAME"
+            echo "Running: java -jar $PATH_TO_JAR $JAVA_OPTS"
+            su -m $SERVICE_USER -c "java -jar $PATH_TO_JAR $JAVA_OPTS > /dev/null 2>&1  &"
+            echo "$SERVICE_NAME started ..."
+        else
+            echo "$SERVICE_NAME is already running ..."
+        fi
+    ;;
+    stop)
+        if [ -f $PID_PATH_NAME ]; then
+            PID=$(cat $PID_PATH_NAME);
+            echo "$SERVICE_NAME stoping ..."
+            kill $PID;
+            echo "$SERVICE_NAME stopped ..."
+            rm $PID_PATH_NAME
+        else
+            echo "$SERVICE_NAME is not running ..."
+        fi
+    ;;
 
-# Install application
-if [ ! -d "/opt/$SERVICE_NAME" ]; then
-  mkdir /opt/$SERVICE_NAME
-fi
+    restart)
+        $0 stop
+        $0 start
+    ;;
 
-if [ ! -d "/opt/$SERVICE_NAME/log" ]; then
-  mkdir /opt/$SERVICE_NAME/log
-fi
-
-
-# startup script
-cat initd.sh |  sed -e "s/__ACTIVE_PROFILE__/$SERVICE_PROFILE/" > /etc/init.d/$SERVICE_NAME
-chmod +x /etc/init.d/$SERVICE_NAME
-
-/sbin/chkconfig --add $SERVICE_NAME
-/sbin/chkconfig $SERVICE_NAME on
-
-# application
-cp $SERVICE_NAME-$SERVICE_VERSION-exec.jar /opt/$SERVICE_NAME/$SERVICE_NAME-exec.jar
-
-# permission
-chown -R webapp:webapp /opt/$SERVICE_NAME
-
-/etc/init.d/$SERVICE_NAME stop
-/etc/init.d/$SERVICE_NAME start
+    *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+esac
