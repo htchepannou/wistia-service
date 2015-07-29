@@ -1,15 +1,15 @@
 package com.tchepannou.wistia.model;
 
-import javax.xml.bind.annotation.XmlElement;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.Date;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Project {
     //-- Attributes
     private long id;
     private String name;
     private long mediaCount;
-
-    @XmlElement(name = "hashed_id")
     private String hashedId;
     private boolean anonymousCanUpload;
     private boolean anonymousCanDownload;

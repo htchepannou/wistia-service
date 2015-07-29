@@ -1,8 +1,11 @@
 package com.tchepannou.wistia.model;
 
-import javax.xml.bind.annotation.XmlElement;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Date;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Video {
     //-- Attributes
     private long id;
@@ -10,9 +13,9 @@ public class Video {
     private String type;
     private double duration;
 
-    @XmlElement(name = "hashed_id")
+    @JsonProperty("hashed_id")
     private String hashedId;
-    private double progress;
+
     private Date created;
     private Date updated;
     private Thumbnail thumbnail;
@@ -57,14 +60,6 @@ public class Video {
 
     public void setHashedId(String hashedId) {
         this.hashedId = hashedId;
-    }
-
-    public double getProgress() {
-        return progress;
-    }
-
-    public void setProgress(double progress) {
-        this.progress = progress;
     }
 
     public Date getCreated() {

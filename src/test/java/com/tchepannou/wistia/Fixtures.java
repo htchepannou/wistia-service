@@ -24,7 +24,6 @@ public class Fixtures {
         video.setHashedId("12-haSh3d");
         video.setDuration(200);
         video.setName("foo");
-        video.setProgress(30);
         video.setThumbnail(thumbnail);
         return video;
     }
