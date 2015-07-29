@@ -62,6 +62,7 @@ public class CallbackImpl implements Callback {
         Map<String, String> params = new LinkedHashMap<>();
         params.put("event", "project-created");
         params.put("id", id);
+        params.put("name", project.getName());
         params.put("hashed_id", project.getHashedId());
         post(id, params, Category.PROJECT);
     }
@@ -71,6 +72,7 @@ public class CallbackImpl implements Callback {
         Map<String, String> params = new LinkedHashMap<>();
         params.put("event", "video-uploaded");
         params.put("id", id);
+        params.put("name", video.getName());
         params.put("hashed_id", video.getHashedId());
         post(id, params, Category.VIDEO);
     }

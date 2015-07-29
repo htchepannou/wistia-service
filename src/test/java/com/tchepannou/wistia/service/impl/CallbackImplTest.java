@@ -73,6 +73,7 @@ public class CallbackImplTest {
         assertThat(params.getValue()).containsExactly(
                 MapEntry.entry("event", "project-created"),
                 MapEntry.entry("id", "123"),
+                MapEntry.entry("name", project.getName()),
                 MapEntry.entry("hashed_id", project.getHashedId()),
                 MapEntry.entry("x-timestamp", "1234567890"),
                 MapEntry.entry("x-hash", "this-is-the-hash")
@@ -102,6 +103,7 @@ public class CallbackImplTest {
         assertThat(content).contains(
                 "x-hash=this-is-the-hash",
                 "event=project-created",
+                "name=" + project.getName(),
                 "hashed_id=" + project.getHashedId(),
                 "id=123",
                 "x-timestamp=" + now,
@@ -133,6 +135,7 @@ public class CallbackImplTest {
         assertThat(params.getValue()).containsExactly(
                 MapEntry.entry("event", "video-uploaded"),
                 MapEntry.entry("id", "123"),
+                MapEntry.entry("name", video.getName()),
                 MapEntry.entry("hashed_id", video.getHashedId()),
                 MapEntry.entry("x-timestamp", "1234567890"),
                 MapEntry.entry("x-hash", "this-is-the-hash")
@@ -163,6 +166,7 @@ public class CallbackImplTest {
         assertThat(content).contains(
                 "x-hash=this-is-the-hash",
                 "event=video-uploaded",
+                "name=" + video.getName(),
                 "hashed_id=" + video.getHashedId(),
                 "id=123",
                 "x-timestamp=" + now,
