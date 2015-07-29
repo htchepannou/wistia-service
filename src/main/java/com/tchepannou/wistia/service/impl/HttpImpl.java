@@ -39,7 +39,7 @@ public class HttpImpl implements Http {
         List<NameValuePair> nvps = params.keySet().stream()
                 .map(key -> new BasicNameValuePair(key, params.get(key)))
                 .collect(Collectors.toList())
-                ;
+        ;
 
         HttpPost request = new HttpPost(url);
         request.setEntity(new UrlEncodedFormEntity(nvps, Consts.UTF_8));
@@ -60,6 +60,7 @@ public class HttpImpl implements Http {
         request.addHeader("Accept", "application/json");
         request.addHeader("Content-Type", ContentType.APPLICATION_JSON.getMimeType());
 
+        LOG.info("POST " + url + "\n" + json);
         return post(request, type);
     }
 
@@ -67,10 +68,9 @@ public class HttpImpl implements Http {
         try (final CloseableHttpClient client = HttpClients.createDefault()) {
             try (final CloseableHttpResponse response = client.execute(request)) {
                 int statusCode = response.getStatusLine().getStatusCode();
-                LOG.info("POST " + request.getURI() + " " + statusCode);
 
                 if (statusCode / 100 != 2) {
-                    throw new IOException(response.getStatusLine().toString());
+                    throw new IOException("Invalid status code: " + response.getStatusLine().toString());
                 }
 
                 String json = toString(response.getEntity().getContent());

@@ -83,7 +83,7 @@ public class CallbackImpl implements Callback {
 
             http.postJson(callbackUrl, params, String.class);
         } catch (Exception e) {
-            LOG.error("\n---------------------\nPOST {}\n{}\n", callbackUrl, params, e);
+            LOG.error("FAIL POST {} - {}", callbackUrl, params, e);
 
             onError(id, params, category);
         }
