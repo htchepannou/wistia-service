@@ -1,5 +1,8 @@
 package com.tchepannou.wistia.service.impl;
 
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
 import com.google.common.io.Files;
 import com.tchepannou.wistia.Fixtures;
 import com.tchepannou.wistia.dto.CallbackResponse;
@@ -9,6 +12,7 @@ import com.tchepannou.wistia.service.Callback;
 import com.tchepannou.wistia.service.HashGenerator;
 import com.tchepannou.wistia.service.Http;
 import org.assertj.core.data.MapEntry;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -25,8 +29,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CallbackImplTest {
@@ -43,10 +46,40 @@ public class CallbackImplTest {
     private Http http;
 
     @Mock
+    private MetricRegistry metrics;
+
+    @Mock
+    private Counter calls;
+
+    @Mock
+    private Counter errors;
+
+    @Mock
+    private Counter spool;
+
+    @Mock
+    Timer timer;
+
+    @Mock
+    private Timer.Context duration;
+
+
+    @Mock
     private HashGenerator hash;
 
     @InjectMocks
     private Callback callback = new CallbackImpl(callbackUrl, errorDir, apiKey);
+
+
+    @Before
+    public void setUp (){
+        when(metrics.counter(CallbackImpl.METRIC_CALLS)).thenReturn(calls);
+        when(metrics.counter(CallbackImpl.METRIC_ERRORS)).thenReturn(errors);
+        when(metrics.counter(CallbackImpl.METRIC_SPOOL_SIZE)).thenReturn(spool);
+
+        when(timer.time()).thenReturn(duration);
+        when(metrics.timer(CallbackImpl.METRIC_DURATION)).thenReturn(timer);
+    }
 
 
     @Test
@@ -78,6 +111,12 @@ public class CallbackImplTest {
                 MapEntry.entry("x-timestamp", "1234567890"),
                 MapEntry.entry("x-hash", "this-is-the-hash")
         );
+
+        verify(calls).inc();
+        verify(timer).time();
+        verify(duration).stop();
+        verify(errors, never()).inc();
+        verify(spool, never()).inc();
     }
 
     @Test
@@ -109,6 +148,12 @@ public class CallbackImplTest {
                 "x-timestamp=" + now,
                 "x-hash=this-is-the-hash"
         );
+
+        verify(calls).inc();
+        verify(timer).time();
+        verify(duration).stop();
+        verify(errors).inc();
+        verify(spool).inc();
     }
 
     @Test
@@ -141,6 +186,11 @@ public class CallbackImplTest {
                 MapEntry.entry("x-hash", "this-is-the-hash")
         );
 
+        verify(calls).inc();
+        verify(timer).time();
+        verify(duration).stop();
+        verify(errors, never()).inc();
+        verify(spool, never()).inc();
     }
 
     @Test
@@ -172,4 +222,10 @@ public class CallbackImplTest {
                 "x-timestamp=" + now,
                 "x-hash=this-is-the-hash"
         );
+
+        verify(calls).inc();
+        verify(timer).time();
+        verify(duration).stop();
+        verify(errors).inc();
+        verify(spool).inc();
     }}

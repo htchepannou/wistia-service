@@ -1,11 +1,15 @@
 package com.tchepannou.wistia.service.impl;
 
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
 import com.tchepannou.wistia.Fixtures;
 import com.tchepannou.wistia.model.Project;
 import com.tchepannou.wistia.model.Video;
 import com.tchepannou.wistia.service.Http;
 import com.tchepannou.wistia.service.WistiaClient;
 import org.assertj.core.data.MapEntry;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -13,10 +17,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.IOException;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -27,8 +34,33 @@ public class WistiaClientImplTest {
     @Mock
     private Http http;
 
+    @Mock
+    private MetricRegistry metrics;
+
+    @Mock
+    private Counter calls;
+
+    @Mock
+    private Counter errors;
+
+    @Mock
+    Timer timer;
+
+    @Mock
+    private Timer.Context duration;
+
     @InjectMocks
     private WistiaClient wistia = new WistiaClientImpl(apiPassword);
+
+
+    @Before
+    public void setUp (){
+        when(metrics.counter(WistiaClientImpl.METRIC_CALLS)).thenReturn(calls);
+        when(metrics.counter(WistiaClientImpl.METRIC_ERRORS)).thenReturn(errors);
+
+        when(timer.time()).thenReturn(duration);
+        when(metrics.timer(WistiaClientImpl.METRIC_DURATION)).thenReturn(timer);
+    }
 
     @Test
     public void testCreateProject() throws Exception {
@@ -58,9 +90,12 @@ public class WistiaClientImplTest {
                 MapEntry.entry("api_password", apiPassword)
         );
         assertThat(params.getValue()).hasSize(5);
+
+        verify(calls).inc();
+        verify(errors, never()).inc();
+        verify(timer).time();
+        verify(duration).stop();
     }
-
-
 
     @Test
     public void testUpload() throws Exception {
@@ -88,5 +123,28 @@ public class WistiaClientImplTest {
                 MapEntry.entry("api_password", apiPassword)
         );
         assertThat(params.getValue()).hasSize(3);
+
+        verify(calls).inc();
+        verify(errors, never()).inc();
+        verify(timer).time();
+        verify(duration).stop();
+    }
+
+    @Test
+    public void testUpload_Error() throws Exception {
+        // Given
+        final Video expected = Fixtures.newVideo();
+        when(http.post(anyString(), anyMap(), any(Class.class))).thenThrow(IOException.class);
+
+        // When
+        try {
+            wistia.upload("http://glgfkl.com", "12-H@$3d");
+            fail("");
+        } catch (IOException e) {
+            verify(calls).inc();
+            verify(errors).inc();
+            verify(timer).time();
+            verify(duration).stop();
+        }
     }
 }

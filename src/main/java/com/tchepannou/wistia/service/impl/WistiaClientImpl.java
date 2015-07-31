@@ -1,5 +1,7 @@
 package com.tchepannou.wistia.service.impl;
 
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
 import com.tchepannou.wistia.model.Project;
 import com.tchepannou.wistia.model.Video;
 import com.tchepannou.wistia.service.Http;
@@ -13,11 +15,19 @@ import java.util.Map;
 
 public class WistiaClientImpl implements WistiaClient {
     //-- Attributes
-    @Autowired
-    private Http http;
+    public static final String METRIC_CALLS = "wistia.calls";
+    public static final String METRIC_ERRORS = "wistia.errors";
+    public static final String METRIC_DURATION = "wistia.ducation";
+
 
     @Value("${wistia.api_password}")
     private String apiPassword;
+
+    @Autowired
+    private Http http;
+
+    @Autowired
+    private MetricRegistry metrics;
 
     public WistiaClientImpl (){
     }
@@ -35,7 +45,7 @@ public class WistiaClientImpl implements WistiaClient {
         params.put("anonymousCanDownload", "0");
         params.put("public", "0");
 
-        return http.post("https://api.wistia.com/v1/projects.json", params, Project.class);
+        return post("https://api.wistia.com/v1/projects.json", params, Project.class);
     }
 
     @Override
@@ -44,10 +54,27 @@ public class WistiaClientImpl implements WistiaClient {
         params.put("url", url);
         params.put("project_id", projectHashedId);
 
-        return http.post("https://upload.wistia.com", params, Video.class);
+        return post("https://upload.wistia.com", params, Video.class);
     }
 
 
+    private <T> T post (String url, Map<String, String> params, Class<T> type) throws IOException {
+        Timer.Context timer = metrics.timer(METRIC_DURATION).time();
+        metrics.counter(METRIC_CALLS).inc();
+        try {
+
+            return http.post(url, params, type);
+
+        } catch (IOException e){
+            metrics.counter(METRIC_ERRORS).inc();
+            throw e;
+        } catch (RuntimeException e){
+            metrics.counter(METRIC_ERRORS).inc();
+            throw e;
+        } finally {
+            timer.stop();
+        }
+    }
     private Map<String, String> createParams(){
         Map<String, String> params = new HashMap<>();
         params.put("api_password", apiPassword);

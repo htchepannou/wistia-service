@@ -1,5 +1,7 @@
 package com.tchepannou.wistia.service.impl;
 
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
 import com.tchepannou.wistia.dto.CallbackResponse;
 import com.tchepannou.wistia.model.Project;
 import com.tchepannou.wistia.model.Video;
@@ -29,6 +31,11 @@ public class CallbackImpl implements Callback {
     //-- Attributes
     private static final Logger LOG = LoggerFactory.getLogger(CallbackImpl.class);
 
+    public static final String METRIC_CALLS = "wistia.callback.calls";
+    public static final String METRIC_ERRORS = "wistia.callback.errors";
+    public static final String METRIC_DURATION = "wistia.callback.duration";
+    public static final String METRIC_SPOOL_SIZE = "wistia.callback.spool.size";
+
     @Value("${callback.url}")
     private String callbackUrl;
 
@@ -46,6 +53,9 @@ public class CallbackImpl implements Callback {
 
     @Autowired
     private HashGenerator hashGenerator;
+
+    @Autowired
+    private MetricRegistry metrics;
 
     //-- Constructor
     public CallbackImpl(){
@@ -79,16 +89,25 @@ public class CallbackImpl implements Callback {
 
     //-- Private
     private void post (String id, Map<String, String> params, Category category) {
+        Timer.Context timer = metrics.timer(METRIC_DURATION).time();
+        metrics.counter(METRIC_CALLS).inc();
+
         try {
+
             String hash = hashGenerator.generate(apiKey, params.values());
             params.put("x-timestamp", String.valueOf(clock.millis()));
             params.put("x-hash", hash);
 
             http.postJson(callbackUrl, params, CallbackResponse.class);
-        } catch (Exception e) {
-            LOG.error("FAIL POST {} - {}", callbackUrl, params, e);
 
+        } catch (Exception e) {
+
+            LOG.error("FAIL POST {} - {}", callbackUrl, params, e);
+            metrics.counter(METRIC_ERRORS).inc();
             onError(id, params, category);
+
+        } finally {
+            timer.stop();
         }
     }
 
@@ -102,6 +121,8 @@ public class CallbackImpl implements Callback {
             Properties properties = new Properties();
             properties.putAll(params);
             properties.store(out, id);
+
+            metrics.counter(METRIC_SPOOL_SIZE).inc();
         } catch (IOException e){
             LOG.error("Unable to store error into {}\nid={}\nparams={}", file, id, params, e);
         }
