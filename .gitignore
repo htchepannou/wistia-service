@@ -34,12 +34,5 @@ target/
 logs/
 **/minifiedCss/
 **/rawCss/
-DPS-calls/
-*_ActivityLog_Request.xml
-*_AirSearch_Response.xml
-*_PackageSearch_Response.xml
-
-#ignoring JMeter result and log files
-**/performance/jmeter.log
-**/performance/jmxcsvresults/
-exposurelogs/
+application.pid
+application.port
