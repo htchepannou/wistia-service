@@ -8,16 +8,32 @@ import com.codahale.metrics.jvm.BufferPoolMetricSet;
 import com.codahale.metrics.jvm.GarbageCollectorMetricSet;
 import com.codahale.metrics.jvm.MemoryUsageGaugeSet;
 import com.codahale.metrics.jvm.ThreadStatesGaugeSet;
+import com.google.common.base.Strings;
+import com.readytalk.metrics.StatsDReporter;
 import com.ryantenney.metrics.spring.config.annotation.EnableMetrics;
 import com.ryantenney.metrics.spring.config.annotation.MetricsConfigurerAdapter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 import java.lang.management.ManagementFactory;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableMetrics
 public class MetricsConfig extends MetricsConfigurerAdapter {
+    @Value("${statsd.hostname:}")
+    private String statsdHostname;
+
+    @Value("${statsd.port:8125}")
+    private int statsdPort;
+
+    @Value("${statsd.period_seconds:30}")
+    private int statsdPeriodSeconds;
+
+    @Value("${spring.application.name}")
+    private String applicationName;
+
     //-- MetricsConfigurerAdapter
     @Override
     public void configureReporters(MetricRegistry registry) {
@@ -28,8 +44,20 @@ public class MetricsConfig extends MetricsConfigurerAdapter {
         registerAll("JVM.threads", new ThreadStatesGaugeSet(), registry);
 
         /* jmx */
-        JmxReporter reporter = JmxReporter.forRegistry(registry).build();
-        reporter.start();
+        if (Strings.isNullOrEmpty(statsdHostname)) {
+            JmxReporter
+                    .forRegistry(registry)
+                    .build()
+                    .start();
+            ;
+        } else {
+            StatsDReporter
+                    .forRegistry(registry)
+                    .prefixedWith(applicationName)
+                    .build(statsdHostname, statsdPort)
+                    .start(statsdPeriodSeconds, TimeUnit.SECONDS)
+            ;
+        }
     }
 
     //-- Private
