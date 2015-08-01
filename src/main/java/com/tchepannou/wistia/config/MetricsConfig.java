@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 @EnableMetrics
 public class MetricsConfig extends MetricsConfigurerAdapter {
+    //-- Attributes
     @Value("${statsd.hostname:}")
     private String statsdHostname;
 
@@ -43,7 +44,7 @@ public class MetricsConfig extends MetricsConfigurerAdapter {
         registerAll("JVM.memory", new MemoryUsageGaugeSet(), registry);
         registerAll("JVM.threads", new ThreadStatesGaugeSet(), registry);
 
-        /* jmx */
+        /* reporter */
         if (Strings.isNullOrEmpty(statsdHostname)) {
             JmxReporter
                     .forRegistry(registry)
