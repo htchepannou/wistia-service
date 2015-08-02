@@ -4,9 +4,7 @@ import com.codahale.metrics.Counter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.tchepannou.wistia.Fixtures;
-import com.tchepannou.wistia.exception.VideoAlreadyUploadedException;
 import com.tchepannou.wistia.model.Video;
-import com.tchepannou.wistia.service.Db;
 import com.tchepannou.wistia.service.Http;
 import com.tchepannou.wistia.service.WistiaClient;
 import org.assertj.core.data.MapEntry;
@@ -34,9 +32,6 @@ public class WistiaClientImplTest {
 
     @Mock
     private Http http;
-
-    @Mock
-    private Db db;
 
     @Mock
     private MetricRegistry metrics;
@@ -93,24 +88,10 @@ public class WistiaClientImplTest {
         );
         assertThat(params.getValue()).hasSize(3);
 
-        verify(db).put("111", "http://glgfkl.com");
-
         verify(calls).inc();
         verify(errors, never()).inc();
         verify(timer).time();
         verify(duration).stop();
-    }
-
-    @Test(expected = VideoAlreadyUploadedException.class)
-    public void testUpload_AlreadyUploaded() throws Exception {
-        // Given
-        final Video expected = Fixtures.newVideo();
-        when(http.post(anyString(), anyMap(), any(Class.class))).thenReturn(expected);
-
-        when(db.get("111")).thenReturn("http://glgfkl.com");
-
-        // When
-        wistia.upload("111", "http://glgfkl.com", "12-H@$3d");
     }
 
     @Test

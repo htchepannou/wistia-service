@@ -2,17 +2,14 @@ package com.tchepannou.wistia.service.impl;
 
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
-import com.tchepannou.wistia.exception.VideoAlreadyUploadedException;
 import com.tchepannou.wistia.exception.WistiaException;
 import com.tchepannou.wistia.model.Video;
-import com.tchepannou.wistia.service.Db;
 import com.tchepannou.wistia.service.Http;
 import com.tchepannou.wistia.service.WistiaClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,9 +29,6 @@ public class WistiaClientImpl implements WistiaClient {
     @Autowired
     private MetricRegistry metrics;
 
-    @Autowired
-    private Db db;
-
     public WistiaClientImpl (){
     }
 
@@ -45,25 +39,15 @@ public class WistiaClientImpl implements WistiaClient {
     //-- WistiaClient overrides
     @Override
     public Video upload(String id, String url, String projectHashedId) throws WistiaException, IOException {
-        if (alreadyUploaded(id, url)) {
-            throw new VideoAlreadyUploadedException(Arrays.asList(id, url).toString());
-        } else {
-            Map<String, String> params = createParams();
-            params.put("url", url);
-            params.put("project_id", projectHashedId);
+        Map<String, String> params = createParams();
+        params.put("url", url);
+        params.put("project_id", projectHashedId);
 
-            Video video = post("https://upload.wistia.com", params, Video.class);
-            db.put(id, url);
+        Video video = post("https://upload.wistia.com", params, Video.class);
 
-            return video;
-        }
+        return video;
     }
 
-
-    private boolean alreadyUploaded(String id, String url) throws IOException{
-        String value = db.get(id);
-        return value != null && value.equalsIgnoreCase(url);
-    }
 
     private <T> T post (String url, Map<String, String> params, Class<T> type) throws IOException {
         Timer.Context timer = metrics.timer(METRIC_DURATION).time();

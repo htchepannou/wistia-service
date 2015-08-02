@@ -7,7 +7,6 @@ import com.jayway.restassured.internal.mapper.ObjectMapperType;
 import com.tchepannou.wistia.Starter;
 import com.tchepannou.wistia.dto.UploadVideoRequest;
 import com.tchepannou.wistia.service.Http;
-import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpStatus;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
@@ -25,9 +24,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Map;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -42,9 +39,6 @@ public class WistiaControllerIT extends AbstractHandler {
     //-- Attributes
     @Value("${server.port}")
     private int port;
-
-    @Value("${db.directory}")
-    private String dbDirectory;
 
     @Value("${wistia.test_project_hashed_id}")
     private String projectHashedKey;
@@ -71,8 +65,6 @@ public class WistiaControllerIT extends AbstractHandler {
     @Before
     public void setUp () throws Exception {
         RestAssured.port = port;
-
-        FileUtils.deleteDirectory(new File(dbDirectory));
 
         server = new Server(8081);
         server.setHandler(this);
@@ -111,11 +103,6 @@ public class WistiaControllerIT extends AbstractHandler {
         ;
         // @formatter:on
 
-        /* local file */
-        final File file = Paths.get(dbDirectory, "1", "2", "3", "12345").toFile();
-        assertThat(file).exists();
-        assertThat(file).hasContent(url);
-
         /* make sure video uploaded */
         String videoUrl = "https://api.wistia.com/v1/medias/" + hashedId + ".json?api_password=" + apiPassword;
         try {
@@ -139,47 +126,5 @@ public class WistiaControllerIT extends AbstractHandler {
         assertThat(callback.get("event")).isEqualTo("video-uploaded");
         assertThat(callback).containsKey("x-timestamp");
         assertThat(callback).containsKey("x-hash");
-    }
-
-    @Test
-    public void testUpload_AlreadyUploaded() throws IOException {
-        final String url = "http://sample-videos.com/video/mp4/720/big_buck_bunny_720p_1mb.mp4";
-        final UploadVideoRequest request = new UploadVideoRequest();
-        request.setId(String.valueOf("12345"));
-        request.setProjectHashId(projectHashedKey);
-        request.setUrl(url);
-
-        // @formatter:off
-        given ()
-                .contentType(ContentType.JSON)
-                .content(request, ObjectMapperType.JACKSON_2)
-        .when()
-            .put("/api/wistia/video")
-        .then()
-            .log()
-                .all()
-        .extract()
-            .path("hashed_id")
-        ;
-
-        given ()
-                .contentType(ContentType.JSON)
-                .content(request, ObjectMapperType.JACKSON_2)
-        .when()
-            .put("/api/wistia/video")
-        .then()
-            .log()
-                .all()
-            .statusCode(HttpStatus.SC_NO_CONTENT)
-        ;
-        // @formatter:on
-
-        /* local file */
-        final File file = Paths.get(dbDirectory, "1", "2", "3", "12345").toFile();
-        assertThat(file).exists();
-        assertThat(file).hasContent(url);
-
-        /* make sure not callback sent */
-        assertThat(callback).isNotNull();
     }
 }
