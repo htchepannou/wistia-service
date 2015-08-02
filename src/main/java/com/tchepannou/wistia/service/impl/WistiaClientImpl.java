@@ -20,7 +20,7 @@ public class WistiaClientImpl implements WistiaClient {
     //-- Attributes
     public static final String METRIC_CALLS = "wistia.calls";
     public static final String METRIC_ERRORS = "wistia.errors";
-    public static final String METRIC_DURATION = "wistia.ducation";
+    public static final String METRIC_DURATION = "wistia.duration";
 
 
     @Value("${wistia.api_password}")
