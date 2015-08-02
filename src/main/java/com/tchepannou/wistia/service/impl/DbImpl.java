@@ -1,6 +1,8 @@
 package com.tchepannou.wistia.service.impl;
 
 import com.tchepannou.wistia.service.Db;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,6 +14,8 @@ import java.util.List;
 
 public class DbImpl implements Db{
     //-- Attributes
+    private static final Logger LOG = LoggerFactory.getLogger(DbImpl.class);
+
     private final File directory;
 
     //-- Constructor
@@ -26,6 +30,8 @@ public class DbImpl implements Db{
     public void put(String id, String value) throws IOException{
         File file = getFile(id);
         file.getParentFile().mkdirs();
+
+        LOG.info("Storing {}={} into {}", id, value, file);
         try(FileOutputStream out = new FileOutputStream(file)){
             out.write(value.getBytes());
         }
@@ -34,6 +40,8 @@ public class DbImpl implements Db{
     @Override
     public boolean remove(String id) {
         File file = getFile(id);
+
+        LOG.info("Storing {} from {}", id, file);
         if (file.exists()){
             return file.delete();
         }
