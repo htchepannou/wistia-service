@@ -1,9 +1,7 @@
 package com.tchepannou.wistia.controller;
 
 import com.tchepannou.wistia.Fixtures;
-import com.tchepannou.wistia.dto.CreateProjectRequest;
 import com.tchepannou.wistia.dto.UploadVideoRequest;
-import com.tchepannou.wistia.model.Project;
 import com.tchepannou.wistia.model.Video;
 import com.tchepannou.wistia.service.Callback;
 import com.tchepannou.wistia.service.WistiaClient;
@@ -30,38 +28,12 @@ public class WistiaControllerTest {
     private WistiaController controller = new WistiaController();
 
     @Test
-    public void testCreateProject() throws Exception {
-        // Given
-        CreateProjectRequest request = Fixtures.newCreateProjectRequest();
-
-        Project project = Fixtures.newProject();
-        when(client.createProject(request.getName())).thenReturn(project);
-
-        // When
-        controller.createProject(request);
-
-        // Then
-        verify(callback).projectCreated(request.getId(), project);
-    }
-
-    @Test(expected = IOException.class)
-    public void testCreateProject_IOException() throws Exception {
-        // Given
-        CreateProjectRequest request = Fixtures.newCreateProjectRequest();
-
-        when(client.createProject(request.getName())).thenThrow(IOException.class);
-
-        // When
-        controller.createProject(request);
-    }
-
-    @Test
     public void testUploadVideo() throws Exception {
         // Given
         UploadVideoRequest request = Fixtures.newUploadVideoRequest();
 
         Video video = Fixtures.newVideo();
-        when(client.upload(request.getUrl(), request.getProjectHashId())).thenReturn(video);
+        when(client.upload(request.getId(), request.getUrl(), request.getProjectHashId())).thenReturn(video);
 
         // When
         controller.uploadVideo(request);
@@ -69,4 +41,17 @@ public class WistiaControllerTest {
         // Then
         verify(callback).videoUploaded(request.getId(), video);
     }
+
+    @Test(expected = IOException.class)
+    public void testUploadVideo_IOException() throws Exception {
+        // Given
+        UploadVideoRequest request = Fixtures.newUploadVideoRequest();
+
+        when(client.upload(request.getId(), request.getUrl(), request.getProjectHashId())).thenThrow(IOException.class);
+
+        // When
+        controller.uploadVideo(request);
+    }
+
+
 }

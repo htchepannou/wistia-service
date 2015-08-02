@@ -33,9 +33,9 @@ public class HealthCheckIT {
         when()
             .get("/health")
         .then()
-            .statusCode(HttpStatus.SC_OK)
             .log()
                 .all()
+            .statusCode(HttpStatus.SC_OK)
             .body("status", is("UP"))
         ;
         // @formatter:on

@@ -1,6 +1,5 @@
 package com.tchepannou.wistia;
 
-import com.tchepannou.wistia.dto.CreateProjectRequest;
 import com.tchepannou.wistia.dto.UploadVideoRequest;
 import com.tchepannou.wistia.model.Project;
 import com.tchepannou.wistia.model.Thumbnail;
@@ -42,16 +41,9 @@ public class Fixtures {
         return obj;
     }
 
-    public static CreateProjectRequest  newCreateProjectRequest(){
-        CreateProjectRequest obj = new CreateProjectRequest();
-        obj.setName("foo");
-        obj.setId("11");
-        return obj;
-    }
-
     public static UploadVideoRequest newUploadVideoRequest (){
         UploadVideoRequest obj = new UploadVideoRequest();
-        obj.setId("32");
+        obj.setId(String.valueOf(System.currentTimeMillis()));
         obj.setUrl("http://fdlkd.com");
         obj.setProjectHashId("1221");
         return obj;
