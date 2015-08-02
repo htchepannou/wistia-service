@@ -2,24 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fbe25bc5-5ebb-44f7-8bf5-ae7ac62d70ec" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/Db.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/impl/DbImpl.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/service/impl/DbImplTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/exception/VideoAlreadyUploadedException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/controller/WistiaControllerIT.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/exception/WistiaException.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/dto/CreateProjectRequest.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/config/AppConfig.java" afterPath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/config/AppConfig.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/Fixtures.java" afterPath="$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/Fixtures.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/controller/HealthCheckIT.java" afterPath="$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/controller/HealthCheckIT.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/Http.java" afterPath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/Http.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/impl/HttpImpl.java" afterPath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/impl/HttpImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/WistiaClient.java" afterPath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/WistiaClient.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/impl/WistiaClientImpl.java" afterPath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/impl/WistiaClientImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/service/impl/WistiaClientImplTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/service/impl/WistiaClientImplTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/controller/WistiaController.java" afterPath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/controller/WistiaController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/controller/WistiaControllerTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/controller/WistiaControllerTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/config/application.properties" afterPath="$PROJECT_DIR$/src/main/resources/config/application.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/impl/DbImpl.java" afterPath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/impl/DbImpl.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="wistia-service.iws" />
@@ -43,10 +26,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="WistiaControllerIT.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="WistiaControllerIT.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/controller/WistiaControllerIT.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.70603675">
+            <state vertical-scroll-proportion="0.0">
               <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -55,6 +38,16 @@
                 <element signature="method#testUpload#0;class#WistiaControllerIT#0" expanded="false" />
                 <element signature="method#testUpload_AlreadyUploaded#0;class#WistiaControllerIT#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DbImpl.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/impl/DbImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.35433072">
+              <caret line="42" column="0" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -197,7 +190,6 @@
         <option value="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/config/MetricsConfig.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/Db.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/config/AppConfig.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/impl/DbImpl.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/service/impl/DbImplTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/WistiaException.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/exception/WistiaException.java" />
@@ -214,6 +206,7 @@
         <option value="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/Http.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/impl/HttpImpl.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/controller/WistiaControllerIT.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/impl/DbImpl.java" />
       </list>
     </option>
   </component>
@@ -922,7 +915,7 @@
       <workItem from="1438289869780" duration="3914000" />
       <workItem from="1438306052478" duration="4685000" />
       <workItem from="1438431284841" duration="4494000" />
-      <workItem from="1438463720778" duration="12891000" />
+      <workItem from="1438463720778" duration="13227000" />
     </task>
     <task id="LOCAL-00001" summary="add ignore file">
       <created>1438086468099</created>
@@ -934,7 +927,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="57096000" />
+    <option name="totallyTimeSpent" value="57432000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="115" y="30" width="1226" height="809" extended-state="0" />
@@ -1303,14 +1296,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/impl/DbImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/WistiaClient.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1430,7 +1415,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/controller/WistiaControllerIT.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.70603675">
+        <state vertical-scroll-proportion="0.0">
           <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -1439,6 +1424,14 @@
             <element signature="method#testUpload#0;class#WistiaControllerIT#0" expanded="false" />
             <element signature="method#testUpload_AlreadyUploaded#0;class#WistiaControllerIT#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/impl/DbImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.35433072">
+          <caret line="42" column="0" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
