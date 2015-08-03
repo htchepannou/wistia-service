@@ -2,7 +2,6 @@ package com.tchepannou.wistia.service.impl;
 
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
-import com.tchepannou.wistia.exception.WistiaException;
 import com.tchepannou.wistia.model.Video;
 import com.tchepannou.wistia.service.Http;
 import com.tchepannou.wistia.service.WistiaClient;
@@ -38,14 +37,12 @@ public class WistiaClientImpl implements WistiaClient {
 
     //-- WistiaClient overrides
     @Override
-    public Video upload(String id, String url, String projectHashedId) throws WistiaException, IOException {
+    public Video upload(String id, String url, String projectHashedId) throws IOException {
         Map<String, String> params = createParams();
         params.put("url", url);
         params.put("project_id", projectHashedId);
 
-        Video video = post("https://upload.wistia.com", params, Video.class);
-
-        return video;
+        return post("https://upload.wistia.com", params, Video.class);
     }
 
 

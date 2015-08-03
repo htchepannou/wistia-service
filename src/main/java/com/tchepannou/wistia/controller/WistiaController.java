@@ -2,7 +2,6 @@ package com.tchepannou.wistia.controller;
 
 import com.tchepannou.wistia.dto.UploadVideoRequest;
 import com.tchepannou.wistia.exception.VideoAlreadyUploadedException;
-import com.tchepannou.wistia.exception.WistiaException;
 import com.tchepannou.wistia.model.Video;
 import com.tchepannou.wistia.service.Callback;
 import com.tchepannou.wistia.service.WistiaClient;
@@ -39,7 +38,7 @@ public class WistiaController {
     //-- Public
     @RequestMapping(method = RequestMethod.PUT, value = "/video")
     @ApiOperation("Upload a Video")
-    public ResponseEntity<Video> uploadVideo (@Valid @RequestBody UploadVideoRequest request) throws IOException, WistiaException {
+    public ResponseEntity<Video> uploadVideo (@Valid @RequestBody UploadVideoRequest request) throws IOException {
         try {
             Video video = client.upload(request.getId(), request.getUrl(), request.getProjectHashId());
             callback.videoUploaded(request.getId(), video);

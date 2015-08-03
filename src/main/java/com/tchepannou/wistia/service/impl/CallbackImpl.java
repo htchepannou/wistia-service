@@ -3,7 +3,6 @@ package com.tchepannou.wistia.service.impl;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.tchepannou.wistia.dto.CallbackResponse;
-import com.tchepannou.wistia.model.Project;
 import com.tchepannou.wistia.model.Video;
 import com.tchepannou.wistia.service.Callback;
 import com.tchepannou.wistia.service.HashGenerator;
@@ -25,7 +24,7 @@ import java.util.Properties;
 public class CallbackImpl implements Callback {
     //-- Enums
     private enum Category {
-        VIDEO, PROJECT
+        VIDEO
     }
 
     //-- Attributes
@@ -67,16 +66,6 @@ public class CallbackImpl implements Callback {
     }
 
     //-- Callback override
-    @Override
-    public void projectCreated(String id, Project project) {
-        Map<String, String> params = new LinkedHashMap<>();
-        params.put("event", "project-created");
-        params.put("id", id);
-        params.put("name", project.getName());
-        params.put("hashed_id", project.getHashedId());
-        post(id, params, Category.PROJECT);
-    }
-
     @Override
     public void videoUploaded(String id, Video video) {
         Map<String, String> params = new LinkedHashMap<>();

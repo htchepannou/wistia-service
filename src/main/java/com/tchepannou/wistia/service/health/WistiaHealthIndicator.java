@@ -37,7 +37,7 @@ public class WistiaHealthIndicator implements HealthIndicator {
     //-- HealthIndicator overrides
     @Override
     public Health health() {
-        String url = String.format("https://api.wistia.com/v1/projects/%s.json?api_password=%s", projectHashId, apiPassword);
+        String url = String.format("https://api.wistia.com/v1/projects/%s.json?api_password=%s", projectHashId, apiPassword);   // NOSONAR
         String displayUrl = url.replace(apiPassword, "...");
         try{
             http.get(url, Map.class);

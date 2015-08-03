@@ -6,7 +6,6 @@ import com.codahale.metrics.Timer;
 import com.google.common.io.Files;
 import com.tchepannou.wistia.Fixtures;
 import com.tchepannou.wistia.dto.CallbackResponse;
-import com.tchepannou.wistia.model.Project;
 import com.tchepannou.wistia.model.Video;
 import com.tchepannou.wistia.service.Callback;
 import com.tchepannou.wistia.service.HashGenerator;
@@ -28,7 +27,10 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyCollection;
+import static org.mockito.Matchers.anyMap;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -81,80 +83,6 @@ public class CallbackImplTest {
         when(metrics.timer(CallbackImpl.METRIC_DURATION)).thenReturn(timer);
     }
 
-
-    @Test
-    public void testProjectCreated() throws Exception {
-        // Given
-        final Project project = Fixtures.newProject();
-
-        when(http.post(anyString(), anyMap(), any(Class.class))).thenReturn(new CallbackResponse("IGNORED"));
-
-        when(hash.generate(anyString(), anyCollection())).thenReturn("this-is-the-hash");
-
-        when(clock.millis()).thenReturn(1234567890L);
-
-        // When
-        callback.projectCreated("123", project);
-
-        final ArgumentCaptor<String> url = ArgumentCaptor.forClass(String.class);
-        final ArgumentCaptor<Map> params = ArgumentCaptor.forClass(Map.class);
-        final ArgumentCaptor<Class> type = ArgumentCaptor.forClass(Class.class);
-
-        verify(http).postJson(url.capture(), params.capture(), type.capture());
-        assertThat(url.getValue()).isEqualTo(callbackUrl);
-        assertThat(type.getValue()).isEqualTo(CallbackResponse.class);
-        assertThat(params.getValue()).containsExactly(
-                MapEntry.entry("event", "project-created"),
-                MapEntry.entry("id", "123"),
-                MapEntry.entry("name", project.getName()),
-                MapEntry.entry("hashed_id", project.getHashedId()),
-                MapEntry.entry("x-timestamp", "1234567890"),
-                MapEntry.entry("x-hash", "this-is-the-hash")
-        );
-
-        verify(calls).inc();
-        verify(timer).time();
-        verify(duration).stop();
-        verify(errors, never()).inc();
-        verify(spool, never()).inc();
-    }
-
-    @Test
-    public void testProjectCreated_httpError() throws Exception {
-        // Given
-        final Project project = Fixtures.newProject();
-
-        when(http.postJson(anyString(), anyMap(), any(Class.class))).thenThrow(IOException.class);
-
-        when(hash.generate(anyString(), anyCollection())).thenReturn("this-is-the-hash");
-
-        long now = System.currentTimeMillis();
-        when(clock.millis()).thenReturn(now);
-
-        // When
-        callback.projectCreated("123", project);
-
-        // Then
-        File file = new File(errorDir, now + "-" + "project-123");
-        assertThat(file).exists();
-
-        List<String> content = Files.readLines(file, Charset.defaultCharset());
-        assertThat(content).contains(
-                "x-hash=this-is-the-hash",
-                "event=project-created",
-                "name=" + project.getName(),
-                "hashed_id=" + project.getHashedId(),
-                "id=123",
-                "x-timestamp=" + now,
-                "x-hash=this-is-the-hash"
-        );
-
-        verify(calls).inc();
-        verify(timer).time();
-        verify(duration).stop();
-        verify(errors).inc();
-        verify(spool).inc();
-    }
 
     @Test
     public void testVideoUploaded() throws Exception {

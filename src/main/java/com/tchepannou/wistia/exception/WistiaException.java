@@ -1,6 +1,8 @@
 package com.tchepannou.wistia.exception;
 
-public class WistiaException extends Exception {
+import java.io.IOException;
+
+public class WistiaException extends IOException {
     public WistiaException(String message) {
         super(message);
     }
