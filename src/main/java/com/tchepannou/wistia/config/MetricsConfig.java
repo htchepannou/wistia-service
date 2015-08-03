@@ -32,7 +32,7 @@ public class MetricsConfig extends MetricsConfigurerAdapter {
     @Value("${statsd.period_seconds:30}")
     private int statsdPeriodSeconds;
 
-    @Value("${spring.application.name}")
+    @Value("${info.app.name}")
     private String applicationName;
 
     //-- MetricsConfigurerAdapter
