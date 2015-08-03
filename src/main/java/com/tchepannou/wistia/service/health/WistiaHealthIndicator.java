@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Map;
 
 public class WistiaHealthIndicator implements HealthIndicator {
+    //-- Attributes
     private static final Logger LOG = LoggerFactory.getLogger(CallbackHeathIndicator.class);
 
     @Value("${wistia.test_project_hashed_id}")
@@ -23,6 +24,17 @@ public class WistiaHealthIndicator implements HealthIndicator {
     @Autowired
     private Http http;
 
+    //-- Constructor
+    public WistiaHealthIndicator (){
+
+    }
+    public WistiaHealthIndicator (String projectHashId, String apiPassword){
+        this.projectHashId = projectHashId;
+        this.apiPassword = apiPassword;
+    }
+
+
+    //-- HealthIndicator overrides
     @Override
     public Health health() {
         String url = String.format("https://api.wistia.com/v1/projects/%s.json?api_password=%s", projectHashId, apiPassword);

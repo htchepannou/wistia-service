@@ -49,16 +49,19 @@ public class WistiaControllerIT extends AbstractHandler {
     @Autowired
     private Http http;
 
-    private Map callback;
+    private Map callbackData;
 
-    private Server server;
+    @Value("${callback.port}")
+    private int callbackPort;
+
+    private Server callback;
 
 
     //-- AbstractHandler overrides
     @Override
     public void handle(String s, Request request, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
             throws IOException, ServletException {
-        callback = new ObjectMapper().readValue(request.getInputStream(), Map.class);
+        callbackData = new ObjectMapper().readValue(request.getInputStream(), Map.class);
     }
 
     //-- Tests
@@ -66,14 +69,14 @@ public class WistiaControllerIT extends AbstractHandler {
     public void setUp () throws Exception {
         RestAssured.port = port;
 
-        server = new Server(8081);
-        server.setHandler(this);
-        server.start();
+        callback = new Server(callbackPort);
+        callback.setHandler(this);
+        callback.start();
     }
 
     @After
     public void tearDown() throws Exception {
-        server.stop();
+        callback.stop();
     }
 
     @Test
@@ -119,12 +122,12 @@ public class WistiaControllerIT extends AbstractHandler {
         }
 
         /* make sure callback sent */
-        assertThat(callback).isNotNull();
-        assertThat(callback.get("id")).isEqualTo("12345");
-        assertThat(callback.get("name")).isEqualTo("big_buck_bunny_720p_1mb.mp4");
-        assertThat(callback.get("hashed_id")).isEqualTo(hashedId);
-        assertThat(callback.get("event")).isEqualTo("video-uploaded");
-        assertThat(callback).containsKey("x-timestamp");
-        assertThat(callback).containsKey("x-hash");
+        assertThat(callbackData).isNotNull();
+        assertThat(callbackData.get("id")).isEqualTo("12345");
+        assertThat(callbackData.get("name")).isEqualTo("big_buck_bunny_720p_1mb.mp4");
+        assertThat(callbackData.get("hashed_id")).isEqualTo(hashedId);
+        assertThat(callbackData.get("event")).isEqualTo("video-uploaded");
+        assertThat(callbackData).containsKey("x-timestamp");
+        assertThat(callbackData).containsKey("x-hash");
     }
 }
