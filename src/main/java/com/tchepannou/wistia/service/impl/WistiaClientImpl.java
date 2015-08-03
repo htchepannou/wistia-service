@@ -56,9 +56,6 @@ public class WistiaClientImpl implements WistiaClient {
         } catch (IOException e){
             metrics.counter(METRIC_ERRORS).inc();
             throw e;
-        } catch (RuntimeException e){
-            metrics.counter(METRIC_ERRORS).inc();
-            throw e;
         } finally {
             timer.stop();
         }

@@ -53,5 +53,4 @@ public class WistiaControllerTest {
         controller.uploadVideo(request);
     }
 
-
 }
