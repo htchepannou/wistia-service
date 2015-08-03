@@ -1,10 +1,8 @@
 package com.tchepannou.wistia;
 
 import com.tchepannou.wistia.dto.UploadVideoRequest;
-import com.tchepannou.wistia.model.Project;
 import com.tchepannou.wistia.model.Thumbnail;
 import com.tchepannou.wistia.model.Video;
-import org.apache.commons.lang.time.DateUtils;
 
 import java.util.Date;
 
@@ -27,19 +25,6 @@ public class Fixtures {
         return video;
     }
 
-    public static Project newProject(){
-        Project obj = new Project();
-        obj.setId(12);
-        obj.setName("foo");
-        obj.setAnonymousCanDownload(true);
-        obj.setAnonymousCanUpload(true);
-        obj.setHashedId("12-hashed");
-        obj.setPublicId("111");
-        obj.setMediaCount(12);
-        obj.setCreated(new Date());
-        obj.setUpdated(DateUtils.addDays(new Date(), -2));
-        return obj;
-    }
 
     public static UploadVideoRequest newUploadVideoRequest (){
         UploadVideoRequest obj = new UploadVideoRequest();
