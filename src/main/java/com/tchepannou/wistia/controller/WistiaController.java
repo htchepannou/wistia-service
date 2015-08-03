@@ -6,8 +6,6 @@ import com.tchepannou.wistia.service.Callback;
 import com.tchepannou.wistia.service.WistiaClient;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,8 +23,6 @@ import java.io.IOException;
 @RequestMapping(value="/api/wistia", produces = MediaType.APPLICATION_JSON_VALUE)
 public class WistiaController {
     //-- Attributes
-    private static  final Logger LOG = LoggerFactory.getLogger(WistiaController.class);
-
     @Autowired
     private WistiaClient client;
 
