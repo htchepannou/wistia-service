@@ -59,7 +59,7 @@ public class WistiaClientImpl implements WistiaClient {
         } catch (IOException e){
             metrics.counter(METRIC_ERRORS).inc();
             throw e;
-        } catch (URISyntaxException e){
+        } catch (URISyntaxException e){     // NOSONAR
             metrics.counter(METRIC_ERRORS).inc();
             throw new MalformedURLException(url);
         } finally {
