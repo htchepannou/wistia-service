@@ -15,6 +15,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -37,6 +39,8 @@ import static org.hamcrest.core.IsNull.notNullValue;
 @WebIntegrationTest
 public class WistiaControllerIT extends AbstractHandler {
     //-- Attributes
+    private static final Logger LOG = LoggerFactory.getLogger(WistiaControllerIT.class);
+
     @Value("${server.port}")
     private int port;
 
@@ -61,6 +65,7 @@ public class WistiaControllerIT extends AbstractHandler {
     @Override
     public void handle(String s, Request request, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
             throws IOException, ServletException {
+        LOG.info("handling request: " + request);
         callbackData = new ObjectMapper().readValue(request.getInputStream(), Map.class);
     }
 
@@ -69,6 +74,7 @@ public class WistiaControllerIT extends AbstractHandler {
     public void setUp () throws Exception {
         RestAssured.port = port;
 
+        LOG.info("Starting callback server on port:" + callbackPort);
         callback = new Server(callbackPort);
         callback.setHandler(this);
         callback.start();
@@ -76,6 +82,7 @@ public class WistiaControllerIT extends AbstractHandler {
 
     @After
     public void tearDown() throws Exception {
+        LOG.info("Stopping callback server");
         callback.stop();
     }
 
