@@ -67,7 +67,11 @@ public class WistiaControllerIT extends AbstractHandler {
     public void handle(String s, Request request, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
             throws IOException, ServletException {
         LOG.info("handling request: " + request);
+
         callbackData = new ObjectMapper().readValue(request.getInputStream(), Map.class);
+
+        httpServletResponse.addHeader("Content-Type", "application/json");
+        httpServletResponse.getWriter().write("{\"status\":\"OK\"}");
         request.setHandled(true);
     }
 
