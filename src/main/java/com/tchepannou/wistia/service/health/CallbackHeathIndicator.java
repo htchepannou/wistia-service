@@ -9,6 +9,8 @@ import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 
 public class CallbackHeathIndicator implements HealthIndicator{
@@ -27,7 +29,7 @@ public class CallbackHeathIndicator implements HealthIndicator{
     public Health health() {
         String url = String.format("http://%s:%d/health", hostname, port);
         try{
-            Map result = http.get(url, Map.class);
+            Map result = http.get(new URI(url), Map.class);
             if ("UP".equals(result.get("status"))){
                 return Health
                         .up()
@@ -39,7 +41,7 @@ public class CallbackHeathIndicator implements HealthIndicator{
                         .withDetail("url", url)
                         .build();
             }
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             LOG.error("Connection error to {}", url, e);
             return Health
                     .down()

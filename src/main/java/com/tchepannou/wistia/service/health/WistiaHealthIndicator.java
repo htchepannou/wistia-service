@@ -9,6 +9,8 @@ import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 
 public class WistiaHealthIndicator implements HealthIndicator {
@@ -40,12 +42,12 @@ public class WistiaHealthIndicator implements HealthIndicator {
         String url = String.format("https://api.wistia.com/v1/projects/%s.json?api_password=%s", projectHashId, apiPassword);   // NOSONAR
         String displayUrl = url.replace(apiPassword, "...");
         try{
-            http.get(url, Map.class);
+            http.get(new URI(url), Map.class);
             return Health
                     .up()
                     .withDetail("url", displayUrl)
                     .build();
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             LOG.error("Connection error to {}", url, e);
             return Health
                     .down()

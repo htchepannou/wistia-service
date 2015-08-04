@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URI;
 import java.time.Clock;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -87,7 +88,7 @@ public class CallbackImpl implements Callback {
             params.put("x-timestamp", String.valueOf(clock.millis()));
             params.put("x-hash", hash);
 
-            http.postJson(callbackUrl, params, CallbackResponse.class);
+            http.postJson(new URI(callbackUrl), params, CallbackResponse.class);
 
         } catch (Exception e) {
 

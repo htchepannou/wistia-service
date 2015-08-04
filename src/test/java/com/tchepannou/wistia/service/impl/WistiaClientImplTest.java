@@ -17,13 +17,13 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyMap;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -65,21 +65,21 @@ public class WistiaClientImplTest {
     public void testUpload() throws Exception {
         // Given
         final Video expected = Fixtures.newVideo();
-        when(http.post(anyString(), anyMap(), any(Class.class))).thenReturn(expected);
+        when(http.post(any(URI.class), anyMap(), any(Class.class))).thenReturn(expected);
 
         // When
-        final Video result = wistia.upload("111", "http://glgfkl.com", "12-H@$3d");
+        final Video result = wistia.upload("http://glgfkl.com", "12-H@$3d");
 
         // Then
         assertThat(result).isEqualToComparingFieldByField(expected);
 
-        final ArgumentCaptor<String> url = ArgumentCaptor.forClass(String.class);
+        final ArgumentCaptor<URI> url = ArgumentCaptor.forClass(URI.class);
         final ArgumentCaptor<Map> params = ArgumentCaptor.forClass(Map.class);
         final ArgumentCaptor<Class> type = ArgumentCaptor.forClass(Class.class);
 
         verify(http).post(url.capture(), params.capture(), type.capture());
 
-        assertThat(url.getValue()).isEqualTo("https://upload.wistia.com");
+        assertThat(url.getValue()).isEqualTo(new URI("https://upload.wistia.com"));
         assertThat(type.getValue()).isEqualTo(Video.class);
         assertThat(params.getValue()).contains(
                 MapEntry.entry("project_id", "12-H@$3d"),
@@ -97,12 +97,11 @@ public class WistiaClientImplTest {
     @Test
     public void testUpload_Error() throws Exception {
         // Given
-        final Video expected = Fixtures.newVideo();
-        when(http.post(anyString(), anyMap(), any(Class.class))).thenThrow(IOException.class);
+        when(http.post(any(URI.class), anyMap(), any(Class.class))).thenThrow(IOException.class);
 
         // When
         try {
-            wistia.upload("123", "http://glgfkl.com", "12-H@$3d");
+            wistia.upload("http://glgfkl.com", "12-H@$3d");
             fail("");
         } catch (IOException e) {
             verify(calls).inc();

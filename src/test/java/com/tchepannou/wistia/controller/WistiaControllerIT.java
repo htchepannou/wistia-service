@@ -27,6 +27,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Map;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -88,7 +89,7 @@ public class WistiaControllerIT extends AbstractHandler {
     }
 
     @Test
-    public void testUpload() throws IOException {
+    public void testUpload() throws Exception {
         final String url = "http://sample-videos.com/video/mp4/720/big_buck_bunny_720p_1mb.mp4";
         final UploadVideoRequest request = new UploadVideoRequest();
         request.setId(String.valueOf("12345"));
@@ -117,13 +118,13 @@ public class WistiaControllerIT extends AbstractHandler {
         /* make sure video uploaded */
         String videoUrl = "https://api.wistia.com/v1/medias/" + hashedId + ".json?api_password=" + apiPassword;
         try {
-            Map video = http.get(videoUrl, Map.class);
+            Map video = http.get(new URI(videoUrl), Map.class);
             assertThat(video.get("name")).isEqualTo("big_buck_bunny_720p_1mb.mp4");
             assertThat(video.get("type")).isEqualTo("Video");
             assertThat(video.get("hashed_id")).isEqualTo(hashedId);
         } finally {
             try {
-                http.delete(videoUrl);
+                http.delete(new URI(videoUrl));
             } catch (Exception e){
 
             }

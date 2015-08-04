@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +40,7 @@ public class WistiaClientImpl implements WistiaClient {
 
     //-- WistiaClient overrides
     @Override
-    public Video upload(String id, String url, String projectHashedId) throws IOException {
+    public Video upload(String url, String projectHashedId) throws IOException {
         Map<String, String> params = createParams();
         params.put("url", url);
         params.put("project_id", projectHashedId);
@@ -51,11 +54,14 @@ public class WistiaClientImpl implements WistiaClient {
         metrics.counter(METRIC_CALLS).inc();
         try {
 
-            return http.post(url, params, type);
+            return http.post(new URI(url), params, type);
 
         } catch (IOException e){
             metrics.counter(METRIC_ERRORS).inc();
             throw e;
+        } catch (URISyntaxException e){
+            metrics.counter(METRIC_ERRORS).inc();
+            throw new MalformedURLException(url);
         } finally {
             timer.stop();
         }

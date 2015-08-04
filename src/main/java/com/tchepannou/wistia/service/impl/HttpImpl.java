@@ -24,6 +24,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,19 +39,19 @@ public class HttpImpl implements Http {
 
     //-- Http overrides
     @Override
-    public void delete(String url) throws IOException {
+    public void delete(URI url) throws IOException {
         LOG.info("DELETE " + url);
         submit(new HttpDelete(url));
     }
 
     @Override
-    public <T> T get(String url, Class<T> type) throws IOException {
+    public <T> T get(URI url, Class<T> type) throws IOException {
         LOG.info("GET " + url);
         return submit(new HttpGet(url), type);
     }
 
     @Override
-    public <T> T post(String url, Map<String, String> params, Class<T> type) throws IOException {
+    public <T> T post(URI url, Map<String, String> params, Class<T> type) throws IOException {
         List<NameValuePair> nvps = params.keySet().stream()
                 .map(key -> new BasicNameValuePair(key, params.get(key)))
                 .collect(Collectors.toList())
@@ -66,7 +67,7 @@ public class HttpImpl implements Http {
     }
 
     @Override
-    public <T> T postJson(String url, Map<String, String> params, Class<T> type) throws IOException {
+    public <T> T postJson(URI url, Map<String, String> params, Class<T> type) throws IOException {
         ObjectMapper mapper = jackson.build();
         String json = mapper.writeValueAsString(params);
 
