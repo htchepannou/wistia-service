@@ -11,14 +11,11 @@ import org.springframework.boot.actuate.health.HealthIndicator;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Map;
+import java.util.List;
 
 public class WistiaHealthIndicator implements HealthIndicator {
     //-- Attributes
     private static final Logger LOG = LoggerFactory.getLogger(CallbackHeathIndicator.class);
-
-    @Value("${wistia.test_project_hashed_id}")
-    private String projectHashId;
 
     @Value("${wistia.api_password}")
     private String apiPassword;
@@ -30,8 +27,7 @@ public class WistiaHealthIndicator implements HealthIndicator {
     public WistiaHealthIndicator (){
 
     }
-    public WistiaHealthIndicator (String projectHashId, String apiPassword){
-        this.projectHashId = projectHashId;
+    public WistiaHealthIndicator (String apiPassword){
         this.apiPassword = apiPassword;
     }
 
@@ -39,10 +35,10 @@ public class WistiaHealthIndicator implements HealthIndicator {
     //-- HealthIndicator overrides
     @Override
     public Health health() {
-        String url = String.format("https://api.wistia.com/v1/projects/%s.json?api_password=%s", projectHashId, apiPassword);   // NOSONAR
+        String url = String.format("https://api.wistia.com/v1/projects.json?api_password=%s", apiPassword);   // NOSONAR
         String displayUrl = url.replace(apiPassword, "...");
         try{
-            http.get(new URI(url), Map.class);
+            http.get(new URI(url), List.class);
             return Health
                     .up()
                     .withDetail("url", displayUrl)

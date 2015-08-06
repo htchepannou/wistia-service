@@ -13,7 +13,7 @@ import org.springframework.boot.actuate.health.Status;
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -28,7 +28,7 @@ public class WistiaHealthIndicatorTest {
     private Http http;
 
     @InjectMocks
-    private HealthIndicator sensor = new WistiaHealthIndicator("_project_hash_id_", "_password_");
+    private HealthIndicator sensor = new WistiaHealthIndicator("_password_");
 
     //-- Test
     @Test
@@ -40,7 +40,7 @@ public class WistiaHealthIndicatorTest {
         Health result = sensor.health();
 
         // Then
-        verify(http).get(new URI("https://api.wistia.com/v1/projects/_project_hash_id_.json?api_password=_password_"), Map.class);
+        verify(http).get(new URI("https://api.wistia.com/v1/projects.json?api_password=_password_"), List.class);
 
         assertThat(result.getStatus()).isEqualTo(Status.UP);
     }
@@ -54,7 +54,7 @@ public class WistiaHealthIndicatorTest {
         Health result = sensor.health();
 
         // Then
-        verify(http).get(new URI("https://api.wistia.com/v1/projects/_project_hash_id_.json?api_password=_password_"), Map.class);
+        verify(http).get(new URI("https://api.wistia.com/v1/projects.json?api_password=_password_"), List.class);
 
         assertThat(result.getStatus()).isEqualTo(Status.DOWN);
     }
