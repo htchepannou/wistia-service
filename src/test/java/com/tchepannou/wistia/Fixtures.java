@@ -18,7 +18,7 @@ public class Fixtures {
         video.setCreated(new Date());
         video.setUpdated(new Date());
         video.setType("mpeg");
-        video.setHashedId("12-haSh3d");
+        video.setHashedId(String.valueOf(System.currentTimeMillis()));
         video.setDuration(200);
         video.setName("foo");
         video.setThumbnail(thumbnail);

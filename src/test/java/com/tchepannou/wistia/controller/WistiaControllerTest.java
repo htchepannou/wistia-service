@@ -33,7 +33,7 @@ public class WistiaControllerTest {
         UploadVideoRequest request = Fixtures.newUploadVideoRequest();
 
         Video video = Fixtures.newVideo();
-        when(client.upload(request.getUrl(), request.getProjectHashId())).thenReturn(video);
+        when(client.upload(request.getUrl(), request.getHashId(), request.getProjectHashId())).thenReturn(video);
 
         // When
         controller.uploadVideo(request);
@@ -42,12 +42,13 @@ public class WistiaControllerTest {
         verify(callback).videoUploaded(request.getId(), video);
     }
 
+
     @Test(expected = IOException.class)
     public void testUploadVideo_IOException() throws Exception {
         // Given
         UploadVideoRequest request = Fixtures.newUploadVideoRequest();
 
-        when(client.upload(request.getUrl(), request.getProjectHashId())).thenThrow(IOException.class);
+        when(client.upload(request.getUrl(), request.getHashId(), request.getProjectHashId())).thenThrow(IOException.class);
 
         // When
         controller.uploadVideo(request);

@@ -5,7 +5,7 @@ import com.tchepannou.wistia.model.Video;
 import java.io.IOException;
 
 public interface WistiaClient {
-    Video upload (String url, String projectHashedId) throws IOException;
+    Video upload (String url, String hashId, String projectHashedId) throws IOException;
 
 
 }

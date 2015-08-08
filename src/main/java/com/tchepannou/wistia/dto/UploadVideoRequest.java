@@ -12,6 +12,8 @@ public class UploadVideoRequest {
 
     private String projectHashId;
 
+    private String hashId;
+
 
     //-- Getter/Setter
     public String getId() {
@@ -36,5 +38,13 @@ public class UploadVideoRequest {
 
     public void setProjectHashId(String projectHashId) {
         this.projectHashId = projectHashId;
+    }
+
+    public String getHashId() {
+        return hashId;
+    }
+
+    public void setHashId(String hashId) {
+        this.hashId = hashId;
     }
 }

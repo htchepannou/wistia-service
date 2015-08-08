@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -84,6 +85,8 @@ public class WistiaControllerIT extends AbstractHandler {
         callback = new Server(callbackPort);
         callback.setHandler(this);
         callback.start();
+
+        callbackData = new HashMap<>();
     }
 
     @After
@@ -93,7 +96,7 @@ public class WistiaControllerIT extends AbstractHandler {
     }
 
     @Test
-    public void testUpload() throws Exception {
+    public void testUpload_Create() throws Exception {
         final String url = "http://sample-videos.com/video/mp4/720/big_buck_bunny_720p_1mb.mp4";
         final UploadVideoRequest request = new UploadVideoRequest();
         request.setId(String.valueOf("12345"));
@@ -127,11 +130,7 @@ public class WistiaControllerIT extends AbstractHandler {
             assertThat(video.get("type")).isEqualTo("Video");
             assertThat(video.get("hashed_id")).isEqualTo(hashedId);
         } finally {
-            try {
-                http.delete(new URI(videoUrl));
-            } catch (Exception e){
-
-            }
+            deleteVideo(hashedId);
         }
 
         /* make sure callback sent */
@@ -142,5 +141,159 @@ public class WistiaControllerIT extends AbstractHandler {
         assertThat(callbackData.get("event")).isEqualTo("video-uploaded");
         assertThat(callbackData).containsKey("x-timestamp");
         assertThat(callbackData).containsKey("x-hash");
+    }
+
+    @Test
+    public void testUpload_Update() throws Exception {
+        /* first upload */
+        final String url = "http://sample-videos.com/video/mp4/720/big_buck_bunny_720p_2mb.mp4";
+        final UploadVideoRequest request = new UploadVideoRequest();
+        request.setId(String.valueOf("12345"));
+        request.setProjectHashId(projectHashedKey);
+        request.setUrl(url);
+
+        // @formatter:off
+        String hashedId0 = given ()
+                .contentType(ContentType.JSON)
+                .content(request, ObjectMapperType.JACKSON_2)
+        .when()
+            .put("/api/wistia/video")
+        .then()
+            .log()
+                .all()
+            .statusCode(HttpStatus.SC_CREATED)
+        .extract()
+            .path("hashed_id")
+        ;
+        // @formatter:on
+
+        String hashedId;
+        try {
+            /* update */
+            request.setUrl("http://sample-videos.com/video/mp4/720/big_buck_bunny_720p_1mb.mp4");
+            request.setHashId(hashedId0);
+
+            // @formatter:off
+            hashedId = given ()
+                    .contentType(ContentType.JSON)
+                    .content(request, ObjectMapperType.JACKSON_2)
+            .when()
+                .put("/api/wistia/video")
+            .then()
+                .log()
+                    .all()
+                .statusCode(HttpStatus.SC_CREATED)
+                .body("name", is("big_buck_bunny_720p_1mb.mp4"))
+                .body("type", is("Video"))
+                .body("created", notNullValue())
+                .body("updated", notNullValue())
+            .extract()
+                .path("hashed_id")
+            ;
+            // @formatter:on
+
+            /* make sure video updated */
+            String videoUrl = "https://api.wistia.com/v1/medias/" + hashedId + ".json?api_password=" + apiPassword;
+            try {
+                Map video = http.get(new URI(videoUrl), Map.class);
+                assertThat(video.get("name")).isEqualTo("big_buck_bunny_720p_1mb.mp4");
+                assertThat(video.get("type")).isEqualTo("Video");
+                assertThat(video.get("hashed_id")).isEqualTo(hashedId);
+                assertThat(hashedId).isNotEqualTo(hashedId0);
+            } finally {
+                deleteVideo(hashedId);
+            }
+        } finally {
+            deleteVideo(hashedId0);
+        }
+
+
+        /* make sure callback sent */
+        assertThat(callbackData).isNotNull();
+        assertThat(callbackData.get("id")).isEqualTo("12345");
+        assertThat(callbackData.get("name")).isEqualTo("big_buck_bunny_720p_1mb.mp4");
+        assertThat(callbackData.get("hashed_id")).isEqualTo(hashedId);
+        assertThat(callbackData.get("event")).isEqualTo("video-uploaded");
+        assertThat(callbackData).containsKey("x-timestamp");
+        assertThat(callbackData).containsKey("x-hash");
+    }
+
+    @Test
+    public void testUpload_Update_NoChange() throws Exception {
+        /* first upload */
+        final String url = "http://sample-videos.com/video/mp4/720/big_buck_bunny_720p_1mb.mp4";
+        final UploadVideoRequest request = new UploadVideoRequest();
+        request.setId(String.valueOf("12345"));
+        request.setProjectHashId(projectHashedKey);
+        request.setUrl(url);
+
+        // @formatter:off
+        String hashedId0 = given ()
+                .contentType(ContentType.JSON)
+                .content(request, ObjectMapperType.JACKSON_2)
+        .when()
+            .put("/api/wistia/video")
+        .then()
+            .log()
+                .all()
+            .statusCode(HttpStatus.SC_CREATED)
+        .extract()
+            .path("hashed_id")
+        ;
+        // @formatter:on
+
+        String hashedId;
+        callbackData.clear();
+        try {
+            /* update */
+            request.setUrl("http://sample-videos.com/video/mp4/720/big_buck_bunny_720p_1mb.mp4");
+            request.setHashId(hashedId0);
+
+            // @formatter:off
+            hashedId = given ()
+                    .contentType(ContentType.JSON)
+                    .content(request, ObjectMapperType.JACKSON_2)
+            .when()
+                .put("/api/wistia/video")
+            .then()
+                .log()
+                    .all()
+                .statusCode(HttpStatus.SC_CREATED)
+                .body("name", is("big_buck_bunny_720p_1mb.mp4"))
+                .body("type", is("Video"))
+                .body("created", notNullValue())
+                .body("updated", notNullValue())
+            .extract()
+                .path("hashed_id")
+            ;
+            // @formatter:on
+
+            /* make sure video updated */
+            String videoUrl = "https://api.wistia.com/v1/medias/" + hashedId + ".json?api_password=" + apiPassword;
+            try {
+                Map video = http.get(new URI(videoUrl), Map.class);
+                assertThat(video.get("name")).isEqualTo("big_buck_bunny_720p_1mb.mp4");
+                assertThat(video.get("type")).isEqualTo("Video");
+                assertThat(video.get("hashed_id")).isEqualTo(hashedId);
+                assertThat(hashedId).isEqualTo(hashedId0);
+            } finally {
+                deleteVideo(hashedId);
+            }
+        } finally {
+            deleteVideo(hashedId0);
+        }
+
+
+        /* make sure callback sent */
+        assertThat(callbackData).isEmpty();
+    }
+
+    //-- Private
+    private void deleteVideo(String hashedId) throws Exception {
+        try{
+            http.delete(new URI("https://api.wistia.com/v1/medias/" + hashedId + ".json?api_password=" + apiPassword));
+        } catch (IOException e){
+            LOG.warn("Unable to deleted Video{}", hashedId, e);
+        }
     }
 }

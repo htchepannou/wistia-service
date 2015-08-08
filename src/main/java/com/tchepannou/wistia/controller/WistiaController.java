@@ -34,8 +34,10 @@ public class WistiaController {
     @RequestMapping(method = RequestMethod.PUT, value = "/video")
     @ApiOperation("Upload a Video")
     public ResponseEntity<Video> uploadVideo (@Valid @RequestBody UploadVideoRequest request) throws IOException {
-        Video video = client.upload(request.getUrl(), request.getProjectHashId());
-        callback.videoUploaded(request.getId(), video);
+        Video video = client.upload(request.getUrl(), request.getHashId(), request.getProjectHashId());
+        if (!video.getHashedId().equals(request.getHashId())) {
+            callback.videoUploaded(request.getId(), video);
+        }
 
         return new ResponseEntity<>(video, HttpStatus.CREATED);
     }

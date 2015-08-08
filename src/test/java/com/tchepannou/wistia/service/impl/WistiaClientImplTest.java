@@ -62,13 +62,13 @@ public class WistiaClientImplTest {
     }
 
     @Test
-    public void testUpload() throws Exception {
+    public void testUpload_Create() throws Exception {
         // Given
         final Video expected = Fixtures.newVideo();
         when(http.post(any(URI.class), anyMap(), any(Class.class))).thenReturn(expected);
 
         // When
-        final Video result = wistia.upload("http://glgfkl.com", "12-H@$3d");
+        final Video result = wistia.upload("http://glgfkl.com", "video-hash-id", "12-H@$3d");
 
         // Then
         assertThat(result).isEqualToComparingFieldByField(expected);
@@ -95,13 +95,92 @@ public class WistiaClientImplTest {
     }
 
     @Test
+    public void testUpload_Update() throws Exception {
+        // Given
+        final Video expected = Fixtures.newVideo();
+        when(http.post(any(URI.class), anyMap(), any(Class.class))).thenReturn(expected);
+
+        final Video oldVideo = Fixtures.newVideo();
+        when(http.get(any(URI.class), any(Class.class))).thenReturn(oldVideo);
+
+        // When
+        final Video result = wistia.upload("http://glgfkl.com", "video-hash-id", "12-H@$3d");
+
+        // Then
+        assertThat(result).isEqualToComparingFieldByField(expected);
+
+        final ArgumentCaptor<URI> url = ArgumentCaptor.forClass(URI.class);
+        final ArgumentCaptor<Map> params = ArgumentCaptor.forClass(Map.class);
+        final ArgumentCaptor<Class> type = ArgumentCaptor.forClass(Class.class);
+
+        verify(http).post(url.capture(), params.capture(), type.capture());
+
+        assertThat(url.getValue()).isEqualTo(new URI("https://upload.wistia.com"));
+        assertThat(type.getValue()).isEqualTo(Video.class);
+        assertThat(params.getValue()).contains(
+                MapEntry.entry("project_id", "12-H@$3d"),
+                MapEntry.entry("url", "http://glgfkl.com"),
+                MapEntry.entry("api_password", apiPassword)
+        );
+        assertThat(params.getValue()).hasSize(3);
+
+        verify(calls).inc();
+        verify(errors, never()).inc();
+        verify(timer).time();
+        verify(duration).stop();
+    }
+
+    @Test
+    public void testUpload_NoChange() throws Exception {
+        // Given
+        final Video oldVideo = Fixtures.newVideo();
+        oldVideo.setName("test.flv");
+        when(http.get(any(URI.class), any(Class.class))).thenReturn(oldVideo);
+
+        // When
+        final Video result = wistia.upload("http://glgfkl.com/" + oldVideo.getName(), "video-hash-id", "12-H@$3d");
+
+        // Then
+        assertThat(result).isEqualToComparingFieldByField(oldVideo);
+
+        verify(http, never()).post(any(URI.class), anyMap(), any(Class.class));
+
+        verify(calls, never()).inc();
+        verify(errors, never()).inc();
+        verify(timer, never()).time();
+        verify(duration, never()).stop();
+    }
+
+
+    @Test
+    public void testUpload_NoChange_FilenameWithSpace() throws Exception {
+        // Given
+        final Video oldVideo = Fixtures.newVideo();
+        oldVideo.setName("test .flv");
+        when(http.get(any(URI.class), any(Class.class))).thenReturn(oldVideo);
+
+        // When
+        final Video result = wistia.upload("http://glgfkl.com/test%20.flv", "video-hash-id", "12-H@$3d");
+
+        // Then
+        assertThat(result).isEqualToComparingFieldByField(oldVideo);
+
+        verify(http, never()).post(any(URI.class), anyMap(), any(Class.class));
+
+        verify(calls, never()).inc();
+        verify(errors, never()).inc();
+        verify(timer, never()).time();
+        verify(duration, never()).stop();
+    }
+
+    @Test
     public void testUpload_Error() throws Exception {
         // Given
         when(http.post(any(URI.class), anyMap(), any(Class.class))).thenThrow(IOException.class);
 
         // When
         try {
-            wistia.upload("http://glgfkl.com", "12-H@$3d");
+            wistia.upload("http://glgfkl.com", "video-hash-id", "12-H@$3d");
             fail("");
         } catch (IOException e) {
             verify(calls).inc();
