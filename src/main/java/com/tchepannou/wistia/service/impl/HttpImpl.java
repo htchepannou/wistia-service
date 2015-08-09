@@ -109,9 +109,8 @@ public class HttpImpl implements Http {
     }
 
     private String toString(InputStream in) throws IOException{
-        try(ByteArrayOutputStream out = new ByteArrayOutputStream()){
-            IOUtils.copy(in, out);
-            return out.toString("utf-8");
-        }
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        IOUtils.copy(in, out);
+        return out.toString("utf-8");
     }
 }
