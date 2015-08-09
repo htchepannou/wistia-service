@@ -89,6 +89,8 @@ public class CallbackImpl implements Callback {
     public void resend() {
         List<File> files = getErrorFiles();
         Set<String> ids = new HashSet<>();
+        LOG.info("{} events to resend", ids.size());
+
         for (File file : files){
             try(InputStream in = new FileInputStream(file)){
                 /* load the data */
@@ -108,7 +110,9 @@ public class CallbackImpl implements Callback {
 
                 /* delete */
                 LOG.info("Deleting " + file);
-                file.delete();
+                if (file.delete()) {
+                    metrics.counter(METRIC_SPOOL_SIZE).dec();
+                }
             } catch (IOException e){
                 LOG.warn("IO error", e);
             }

@@ -184,6 +184,8 @@ public class CallbackImplTest {
         assertThat(f1).doesNotExist();
         assertThat(f2).doesNotExist();
         assertThat(f_1).doesNotExist();
+
+        verify(spool, times(3)).dec();
     }
 
     private File createErrorFile (String id, String name, String hashedId) throws Exception{
