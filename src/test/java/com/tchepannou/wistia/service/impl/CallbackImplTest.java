@@ -39,6 +39,8 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CallbackImplTest {
+    private static long uid = System.currentTimeMillis();
+
     private String callbackUrl = "http://goo.ca/callback";
 
     private String apiKey = "4309534kfdlfkdlkvmc,mgf";
@@ -194,7 +196,7 @@ public class CallbackImplTest {
         properties.put("hashed_id", hashedId);
         properties.put("name", name);
 
-        File file = new File(errorDir, System.currentTimeMillis() + "_" + id);
+        File file = new File(errorDir, (++uid)+ "_" + id);
         try(OutputStream out = new FileOutputStream(file)){
             properties.store(out, "");
         }

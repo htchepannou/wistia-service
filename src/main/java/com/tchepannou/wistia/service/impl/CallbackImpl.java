@@ -89,7 +89,7 @@ public class CallbackImpl implements Callback {
     public void resend() {
         List<File> files = getErrorFiles();
         Set<String> ids = new HashSet<>();
-        LOG.info("{} events to resend", ids.size());
+        LOG.info("{} events to resend", files.size());
 
         for (File file : files){
             try(InputStream in = new FileInputStream(file)){
