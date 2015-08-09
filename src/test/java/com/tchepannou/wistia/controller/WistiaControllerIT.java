@@ -314,8 +314,60 @@ public class WistiaControllerIT extends AbstractHandler {
 
     @Test
     public void testUpload_Callback_NotFound() throws Exception {
-        /* first upload */
         this.httpStatus = 404;
+
+        final UploadVideoRequest request = new UploadVideoRequest();
+        request.setId(String.valueOf("12345"));
+        request.setProjectHashId(projectHashedKey);
+        request.setUrl("http://sample-videos.com/video/mp4/720/big_buck_bunny_720p_1mb.mp4");
+
+        // @formatter:off
+        String hashedId = given ()
+                .contentType(ContentType.JSON)
+                .content(request, ObjectMapperType.JACKSON_2)
+        .when()
+            .put("/api/wistia/video")
+        .then()
+            .log()
+                .all()
+            .statusCode(HttpStatus.SC_CREATED)
+            .body("name", is("big_buck_bunny_720p_1mb.mp4"))
+            .body("type", is("Video"))
+            .body("created", notNullValue())
+            .body("updated", notNullValue())
+        .extract()
+            .path("hashed_id")
+        ;
+        // @formatter:on
+
+        /* make sure video updated */
+        String videoUrl = "https://api.wistia.com/v1/medias/" + hashedId + ".json?api_password=" + apiPassword;
+        try {
+            Map video = http.get(new URI(videoUrl), Map.class);
+            assertThat(video.get("name")).isEqualTo("big_buck_bunny_720p_1mb.mp4");
+            assertThat(video.get("type")).isEqualTo("Video");
+            assertThat(video.get("hashed_id")).isEqualTo(hashedId);
+        } finally {
+            deleteVideo(hashedId);
+        }
+
+        /* make sure callback sent */
+        assertThat(callbackData).isEmpty();
+
+        /* Not error */
+        File dir = new File(errorDir);
+        assertThat(dir).exists();
+        assertThat(dir.listFiles()).hasSize(1);
+
+        String content = Joiner.on('\n').join(Files.readAllLines(dir.listFiles()[0].toPath()));
+        assertThat(content).contains("name=big_buck_bunny_720p_1mb.mp4");
+        assertThat(content).contains("id=" + request.getId());
+        assertThat(content).contains("hashed_id=" + hashedId);
+    }
+
+    @Test
+    public void testUpload_Callback_Timeout() throws Exception {
+        callback.stop();
 
         final UploadVideoRequest request = new UploadVideoRequest();
         request.setId(String.valueOf("12345"));

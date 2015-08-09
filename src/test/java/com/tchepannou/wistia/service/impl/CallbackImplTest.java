@@ -191,8 +191,21 @@ public class CallbackImplTest {
     }
 
     @Test
-    public void testResend_NoError () throws Exception {
+    public void testResend_NoErrorFile () throws Exception {
         // Given
+
+        // When
+        callback.resend();
+
+        // Then
+        verify(http, never()).postJson(any(URI.class), anyMap(), any(Class.class));
+        verify(spool, never()).dec();
+    }
+
+    @Test
+    public void testResend_NoErrorDir () throws Exception {
+        // Given
+        new File(errorDir).delete();
 
         // When
         callback.resend();

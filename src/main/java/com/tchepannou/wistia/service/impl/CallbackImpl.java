@@ -92,32 +92,41 @@ public class CallbackImpl implements Callback {
         LOG.info("{} events to resend", files.size());
 
         for (File file : files){
-            try(InputStream in = new FileInputStream(file)){
-                /* load the data */
-                Properties properties = new Properties();
-                properties.load(in);
-
-                /* sending callback */
-                String id = properties.getProperty("id");
-                if (ids.add(id)) {
-                    Video video = new Video();
-                    video.setName(properties.getProperty("name"));
-                    video.setHashedId(properties.getProperty("hashed_id"));
-
-                    LOG.info("Resending the notification for Video{}", id);
-                    videoUploaded(id, video);
-                }
-
-                /* delete */
-                if (file.delete()) {
-                    LOG.info("Deleted: " + file);
-                    metrics.counter(METRIC_SPOOL_SIZE).dec();
-                } else {
-                    LOG.warn("Unable to delete " + file);
-                }
+            try{
+                resend(file, ids);
             } catch (IOException e){
                 LOG.warn("IO error", e);
             }
+        }
+    }
+
+    private boolean resend (File file, Set<String> ids) throws IOException {
+        try(InputStream in = new FileInputStream(file)){
+            /* load the data */
+            Properties properties = new Properties();
+            properties.load(in);
+
+            if (!file.delete()) {
+                LOG.warn("Unable to delete " + file);
+                return false;
+            }
+
+            /* update metrics */
+            LOG.info("Deleted: " + file);
+            metrics.counter(METRIC_SPOOL_SIZE).dec();
+
+            /* sending callback */
+            String id = properties.getProperty("id");
+            if (ids.add(id)) {
+                Video video = new Video();
+                video.setName(properties.getProperty("name"));
+                video.setHashedId(properties.getProperty("hashed_id"));
+
+                LOG.info("Resending the notification for Video{}", id);
+                videoUploaded(id, video);
+            }
+
+            return true;
         }
     }
 
