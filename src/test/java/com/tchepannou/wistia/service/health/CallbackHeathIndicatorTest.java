@@ -11,12 +11,11 @@ import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.boot.actuate.health.Status;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -32,7 +31,7 @@ public class CallbackHeathIndicatorTest {
     @Test
     public void testHealth_Up() throws Exception {
         // Given
-        when(http.get(any(URI.class), anyObject())).thenReturn(Collections.singletonMap("status", "UP"));
+        when(http.get(anyString(), anyObject())).thenReturn(Collections.singletonMap("status", "UP"));
 
         // When
         Health result = sensor.health();
@@ -45,7 +44,7 @@ public class CallbackHeathIndicatorTest {
     @Test
     public void testHealth_CallbackDown() throws Exception {
         // Given
-        when(http.get(any(URI.class), anyObject())).thenReturn(Collections.singletonMap("status", "DOWN"));
+        when(http.get(anyString(), anyObject())).thenReturn(Collections.singletonMap("status", "DOWN"));
 
         // When
         Health result = sensor.health();
@@ -58,7 +57,7 @@ public class CallbackHeathIndicatorTest {
     @Test
     public void testHealth_IOException() throws Exception {
         // Given
-        when(http.get(any(URI.class), anyObject())).thenThrow(new IOException("error"));
+        when(http.get(anyString(), anyObject())).thenThrow(new IOException("error"));
 
         // When
         Health result = sensor.health();

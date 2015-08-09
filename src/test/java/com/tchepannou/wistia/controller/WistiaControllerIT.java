@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
@@ -141,7 +140,7 @@ public class WistiaControllerIT extends AbstractHandler {
         /* make sure video uploaded */
         String videoUrl = "https://api.wistia.com/v1/medias/" + hashedId + ".json?api_password=" + apiPassword;
         try {
-            Map video = http.get(new URI(videoUrl), Map.class);
+            Map video = http.get(videoUrl, Map.class);
             assertThat(video.get("name")).isEqualTo("big_buck_bunny_720p_1mb.mp4");
             assertThat(video.get("type")).isEqualTo("Video");
             assertThat(video.get("hashed_id")).isEqualTo(hashedId);
@@ -214,7 +213,7 @@ public class WistiaControllerIT extends AbstractHandler {
             /* make sure video updated */
             String videoUrl = "https://api.wistia.com/v1/medias/" + hashedId + ".json?api_password=" + apiPassword;
             try {
-                Map video = http.get(new URI(videoUrl), Map.class);
+                Map video = http.get(videoUrl, Map.class);
                 assertThat(video.get("name")).isEqualTo("big_buck_bunny_720p_1mb.mp4");
                 assertThat(video.get("type")).isEqualTo("Video");
                 assertThat(video.get("hashed_id")).isEqualTo(hashedId);
@@ -293,7 +292,7 @@ public class WistiaControllerIT extends AbstractHandler {
             /* make sure video updated */
             String videoUrl = "https://api.wistia.com/v1/medias/" + hashedId + ".json?api_password=" + apiPassword;
             try {
-                Map video = http.get(new URI(videoUrl), Map.class);
+                Map video = http.get(videoUrl, Map.class);
                 assertThat(video.get("name")).isEqualTo("big_buck_bunny_720p_1mb.mp4");
                 assertThat(video.get("type")).isEqualTo("Video");
                 assertThat(video.get("hashed_id")).isEqualTo(hashedId);
@@ -343,7 +342,7 @@ public class WistiaControllerIT extends AbstractHandler {
         /* make sure video updated */
         String videoUrl = "https://api.wistia.com/v1/medias/" + hashedId + ".json?api_password=" + apiPassword;
         try {
-            Map video = http.get(new URI(videoUrl), Map.class);
+            Map video = http.get(videoUrl, Map.class);
             assertThat(video.get("name")).isEqualTo("big_buck_bunny_720p_1mb.mp4");
             assertThat(video.get("type")).isEqualTo("Video");
             assertThat(video.get("hashed_id")).isEqualTo(hashedId);
@@ -396,7 +395,7 @@ public class WistiaControllerIT extends AbstractHandler {
         /* make sure video updated */
         String videoUrl = "https://api.wistia.com/v1/medias/" + hashedId + ".json?api_password=" + apiPassword;
         try {
-            Map video = http.get(new URI(videoUrl), Map.class);
+            Map video = http.get(videoUrl, Map.class);
             assertThat(video.get("name")).isEqualTo("big_buck_bunny_720p_1mb.mp4");
             assertThat(video.get("type")).isEqualTo("Video");
             assertThat(video.get("hashed_id")).isEqualTo(hashedId);
@@ -421,7 +420,7 @@ public class WistiaControllerIT extends AbstractHandler {
     //-- Private
     private void deleteVideo(String hashedId) throws Exception {
         try{
-            http.delete(new URI("https://api.wistia.com/v1/medias/" + hashedId + ".json?api_password=" + apiPassword));
+            http.delete("https://api.wistia.com/v1/medias/" + hashedId + ".json?api_password=" + apiPassword);
         } catch (IOException e){
             LOG.warn("Unable to deleted Video{}", hashedId, e);
         }

@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URI;
 import java.nio.charset.Charset;
 import java.time.Clock;
 import java.util.List;
@@ -101,7 +100,7 @@ public class CallbackImplTest {
         // Given
         final Video video = Fixtures.newVideo();
 
-        when(http.post(any(URI.class), anyMap(), any(Class.class))).thenReturn(new CallbackResponse("OK"));
+        when(http.post(anyString(), anyMap(), any(Class.class))).thenReturn(new CallbackResponse("OK"));
 
         when(hash.generate(anyString(), anyCollection())).thenReturn("this-is-the-hash");
 
@@ -110,12 +109,12 @@ public class CallbackImplTest {
         // When
         callback.videoUploaded("123", video);
 
-        final ArgumentCaptor<URI> url = ArgumentCaptor.forClass(URI.class);
+        final ArgumentCaptor<String> url = ArgumentCaptor.forClass(String.class);
         final ArgumentCaptor<Map> params = ArgumentCaptor.forClass(Map.class);
         final ArgumentCaptor<Class> type = ArgumentCaptor.forClass(Class.class);
 
         verify(http).postJson(url.capture(), params.capture(), type.capture());
-        assertThat(url.getValue()).isEqualTo(new URI(callbackUrl));
+        assertThat(url.getValue()).isEqualTo(callbackUrl);
         assertThat(type.getValue()).isEqualTo(CallbackResponse.class);
         assertThat(params.getValue()).containsExactly(
                 MapEntry.entry("event", "video-uploaded"),
@@ -138,7 +137,7 @@ public class CallbackImplTest {
         // Given
         final Video video = Fixtures.newVideo();
 
-        when(http.postJson(any(URI.class), anyMap(), any(Class.class))).thenThrow(IOException.class);
+        when(http.postJson(anyString(), anyMap(), any(Class.class))).thenThrow(IOException.class);
 
         when(hash.generate(anyString(), anyCollection())).thenReturn("this-is-the-hash");
 
@@ -181,7 +180,7 @@ public class CallbackImplTest {
         callback.resend();
 
         // Then
-        verify(http, times(2)).postJson(any(URI.class), anyMap(), any(Class.class));
+        verify(http, times(2)).postJson(anyString(), anyMap(), any(Class.class));
 
         assertThat(f1).doesNotExist();
         assertThat(f2).doesNotExist();
@@ -198,7 +197,7 @@ public class CallbackImplTest {
         callback.resend();
 
         // Then
-        verify(http, never()).postJson(any(URI.class), anyMap(), any(Class.class));
+        verify(http, never()).postJson(anyString(), anyMap(), any(Class.class));
         verify(spool, never()).dec();
     }
 
@@ -211,7 +210,7 @@ public class CallbackImplTest {
         callback.resend();
 
         // Then
-        verify(http, never()).postJson(any(URI.class), anyMap(), any(Class.class));
+        verify(http, never()).postJson(anyString(), anyMap(), any(Class.class));
         verify(spool, never()).dec();
     }
 

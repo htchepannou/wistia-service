@@ -17,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -65,7 +64,7 @@ public class WistiaClientImplTest {
     public void testUpload_Create() throws Exception {
         // Given
         final Video expected = Fixtures.newVideo();
-        when(http.post(any(URI.class), anyMap(), any(Class.class))).thenReturn(expected);
+        when(http.post(anyString(), anyMap(), any(Class.class))).thenReturn(expected);
 
         // When
         final Video result = wistia.upload("http://glgfkl.com", "video-hash-id", "12-H@$3d");
@@ -73,13 +72,13 @@ public class WistiaClientImplTest {
         // Then
         assertThat(result).isEqualToComparingFieldByField(expected);
 
-        final ArgumentCaptor<URI> url = ArgumentCaptor.forClass(URI.class);
+        final ArgumentCaptor<String> url = ArgumentCaptor.forClass(String.class);
         final ArgumentCaptor<Map> params = ArgumentCaptor.forClass(Map.class);
         final ArgumentCaptor<Class> type = ArgumentCaptor.forClass(Class.class);
 
         verify(http).post(url.capture(), params.capture(), type.capture());
 
-        assertThat(url.getValue()).isEqualTo(new URI("https://upload.wistia.com"));
+        assertThat(url.getValue()).isEqualTo("https://upload.wistia.com");
         assertThat(type.getValue()).isEqualTo(Video.class);
         assertThat(params.getValue()).contains(
                 MapEntry.entry("project_id", "12-H@$3d"),
@@ -98,10 +97,10 @@ public class WistiaClientImplTest {
     public void testUpload_Update() throws Exception {
         // Given
         final Video expected = Fixtures.newVideo();
-        when(http.post(any(URI.class), anyMap(), any(Class.class))).thenReturn(expected);
+        when(http.post(anyString(), anyMap(), any(Class.class))).thenReturn(expected);
 
         final Video oldVideo = Fixtures.newVideo();
-        when(http.get(any(URI.class), any(Class.class))).thenReturn(oldVideo);
+        when(http.get(anyString(), any(Class.class))).thenReturn(oldVideo);
 
         // When
         final Video result = wistia.upload("http://glgfkl.com", "video-hash-id", "12-H@$3d");
@@ -109,13 +108,13 @@ public class WistiaClientImplTest {
         // Then
         assertThat(result).isEqualToComparingFieldByField(expected);
 
-        final ArgumentCaptor<URI> url = ArgumentCaptor.forClass(URI.class);
+        final ArgumentCaptor<String> url = ArgumentCaptor.forClass(String.class);
         final ArgumentCaptor<Map> params = ArgumentCaptor.forClass(Map.class);
         final ArgumentCaptor<Class> type = ArgumentCaptor.forClass(Class.class);
 
         verify(http).post(url.capture(), params.capture(), type.capture());
 
-        assertThat(url.getValue()).isEqualTo(new URI("https://upload.wistia.com"));
+        assertThat(url.getValue()).isEqualTo("https://upload.wistia.com");
         assertThat(type.getValue()).isEqualTo(Video.class);
         assertThat(params.getValue()).contains(
                 MapEntry.entry("project_id", "12-H@$3d"),
@@ -135,7 +134,7 @@ public class WistiaClientImplTest {
         // Given
         final Video oldVideo = Fixtures.newVideo();
         oldVideo.setName("test.flv");
-        when(http.get(any(URI.class), any(Class.class))).thenReturn(oldVideo);
+        when(http.get(anyString(), any(Class.class))).thenReturn(oldVideo);
 
         // When
         final Video result = wistia.upload("http://glgfkl.com/" + oldVideo.getName(), "video-hash-id", "12-H@$3d");
@@ -143,7 +142,7 @@ public class WistiaClientImplTest {
         // Then
         assertThat(result).isEqualToComparingFieldByField(oldVideo);
 
-        verify(http, never()).post(any(URI.class), anyMap(), any(Class.class));
+        verify(http, never()).post(anyString(), anyMap(), any(Class.class));
 
         verify(calls, never()).inc();
         verify(errors, never()).inc();
@@ -157,7 +156,7 @@ public class WistiaClientImplTest {
         // Given
         final Video oldVideo = Fixtures.newVideo();
         oldVideo.setName("test .flv");
-        when(http.get(any(URI.class), any(Class.class))).thenReturn(oldVideo);
+        when(http.get(anyString(), any(Class.class))).thenReturn(oldVideo);
 
         // When
         final Video result = wistia.upload("http://glgfkl.com/test%20.flv", "video-hash-id", "12-H@$3d");
@@ -165,7 +164,7 @@ public class WistiaClientImplTest {
         // Then
         assertThat(result).isEqualToComparingFieldByField(oldVideo);
 
-        verify(http, never()).post(any(URI.class), anyMap(), any(Class.class));
+        verify(http, never()).post(anyString(), anyMap(), any(Class.class));
 
         verify(calls, never()).inc();
         verify(errors, never()).inc();
@@ -176,7 +175,7 @@ public class WistiaClientImplTest {
     @Test
     public void testUpload_Error() throws Exception {
         // Given
-        when(http.post(any(URI.class), anyMap(), any(Class.class))).thenThrow(IOException.class);
+        when(http.post(anyString(), anyMap(), any(Class.class))).thenThrow(IOException.class);
 
         // When
         try {

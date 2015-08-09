@@ -10,9 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.HashMap;
@@ -72,11 +69,7 @@ public class WistiaClientImpl implements WistiaClient {
             return null;
         } else {
             String url = "https://api.wistia.com/v1/medias/" + hashId + ".json?api_password=" + apiPassword;
-            try {
-                return http.get(new URI(url), Video.class);
-            } catch (URISyntaxException e){
-                throw new IllegalStateException("Bad URL: " + url, e);
-            }
+            return http.get(url, Video.class);
         }
     }
 
@@ -85,14 +78,11 @@ public class WistiaClientImpl implements WistiaClient {
         metrics.counter(METRIC_CALLS).inc();
         try {
 
-            return http.post(new URI(url), params, type);
+            return http.post(url, params, type);
 
         } catch (IOException e){
             metrics.counter(METRIC_ERRORS).inc();
             throw e;
-        } catch (URISyntaxException e){     // NOSONAR
-            metrics.counter(METRIC_ERRORS).inc();
-            throw new MalformedURLException(url);
         } finally {
             timer.stop();
         }
