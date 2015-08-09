@@ -2,18 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fbe25bc5-5ebb-44f7-8bf5-ae7ac62d70ec" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/health/CallbackHeathIndicator.java" afterPath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/health/CallbackHeathIndicator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/service/health/CallbackHeathIndicatorTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/service/health/CallbackHeathIndicatorTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/impl/CallbackImpl.java" afterPath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/impl/CallbackImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/service/impl/CallbackImplTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/service/impl/CallbackImplTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/Http.java" afterPath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/Http.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/impl/HttpImpl.java" afterPath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/impl/HttpImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/service/impl/HttpImplTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/service/impl/HttpImplTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/impl/WistiaClientImpl.java" afterPath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/impl/WistiaClientImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/service/impl/WistiaClientImplTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/service/impl/WistiaClientImplTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/controller/WistiaControllerIT.java" afterPath="$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/controller/WistiaControllerIT.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/health/WistiaHealthIndicator.java" afterPath="$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/health/WistiaHealthIndicator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/service/health/WistiaHealthIndicatorTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/service/health/WistiaHealthIndicatorTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="wistia-service.iws" />
@@ -77,38 +65,18 @@
       <file leaf-file-name="CallbackHeathIndicatorTest.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/service/health/CallbackHeathIndicatorTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.9642857">
-              <caret line="46" column="25" selection-start-line="46" selection-start-column="25" selection-end-line="46" selection-end-column="25" />
+            <state vertical-scroll-proportion="-0.35714287">
+              <caret line="40" column="0" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CallbackImpl.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/service/impl/CallbackImpl.java">
+      <file leaf-file-name="JacksonConfig.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/config/JacksonConfig.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="145" column="37" selection-start-line="145" selection-start-column="37" selection-end-line="145" selection-end-column="37" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CallbackImplTest.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/service/impl/CallbackImplTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.33216783">
-              <caret line="116" column="56" selection-start-line="116" selection-start-column="56" selection-end-line="116" selection-end-column="56" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HttpImplTest.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/service/impl/HttpImplTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="11" column="51" selection-start-line="11" selection-start-column="51" selection-end-line="11" selection-end-column="51" />
+              <caret line="0" column="36" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="36" />
               <folding />
             </state>
           </provider>
@@ -332,6 +300,96 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wistia" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wistia-service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wistia-service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wistia" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="controller" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wistia-service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wistia-service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wistia-service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wistia-service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wistia" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -837,7 +895,7 @@
       <workItem from="1438866867876" duration="3277000" />
       <workItem from="1438994881371" duration="3230000" />
       <workItem from="1439056072161" duration="8727000" />
-      <workItem from="1439125771862" duration="6604000" />
+      <workItem from="1439125771862" duration="7601000" />
     </task>
     <task id="LOCAL-00001" summary="add ignore file">
       <created>1438086468099</created>
@@ -849,7 +907,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="96888000" />
+    <option name="totallyTimeSpent" value="97885000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1341" height="705" extended-state="0" />
@@ -863,11 +921,11 @@
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3964111" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3964111" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="CheckStyle" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3293944" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5269168" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.5269168" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.36412627" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.36412627" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run with VisualVM" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32893" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1627907" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -931,13 +989,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/.idea/vcs.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.idea/libraries/Maven__com_readytalk_metrics3_statsd_4_1_0.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1296,14 +1347,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/service/health/CallbackHeathIndicatorTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.9642857">
-          <caret line="46" column="25" selection-start-line="46" selection-start-column="25" selection-end-line="46" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/service/health/WistiaHealthIndicatorTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-6.5">
@@ -1334,8 +1377,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/service/impl/CallbackImplTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33216783">
-          <caret line="116" column="56" selection-start-line="116" selection-start-column="56" selection-end-line="116" selection-end-column="56" />
+        <state vertical-scroll-proportion="5.970874">
+          <caret line="116" column="17" selection-start-line="116" selection-start-column="17" selection-end-line="116" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/tchepannou/wistia/service/health/CallbackHeathIndicatorTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.35714287">
+          <caret line="40" column="0" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/tchepannou/wistia/config/JacksonConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="36" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="36" />
           <folding />
         </state>
       </provider>

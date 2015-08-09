@@ -58,7 +58,7 @@ public class AppConfig {
         return new WistiaHealthIndicator();
     }
 
-    @Scheduled(cron = "0 0/15 * * * ?")
+    @Scheduled(cron = "0 0/15 * * * *")
     public void resendCallbacks () throws IOException{
         callback().resend();
     }
