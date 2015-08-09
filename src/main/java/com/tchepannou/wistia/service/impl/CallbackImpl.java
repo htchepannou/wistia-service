@@ -86,17 +86,13 @@ public class CallbackImpl implements Callback {
     }
 
     @Override
-    public void resend() {
+    public void resend() throws IOException {
         List<File> files = getErrorFiles();
         Set<String> ids = new HashSet<>();
         LOG.info("{} events to resend", files.size());
 
         for (File file : files){
-            try{
-                resend(file, ids);
-            } catch (IOException e){
-                LOG.warn("IO error", e);
-            }
+            resend(file, ids);
         }
     }
 
