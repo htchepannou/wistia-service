@@ -109,9 +109,11 @@ public class CallbackImpl implements Callback {
                 }
 
                 /* delete */
-                LOG.info("Deleting " + file);
                 if (file.delete()) {
+                    LOG.info("Deleted: " + file);
                     metrics.counter(METRIC_SPOOL_SIZE).dec();
+                } else {
+                    LOG.warn("Unable to delete " + file);
                 }
             } catch (IOException e){
                 LOG.warn("IO error", e);
