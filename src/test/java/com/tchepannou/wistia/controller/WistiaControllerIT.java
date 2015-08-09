@@ -1,12 +1,14 @@
 package com.tchepannou.wistia.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Joiner;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.internal.mapper.ObjectMapperType;
 import com.tchepannou.wistia.Starter;
 import com.tchepannou.wistia.dto.UploadVideoRequest;
 import com.tchepannou.wistia.service.Http;
+import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpStatus;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
@@ -26,8 +28,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,6 +56,9 @@ public class WistiaControllerIT extends AbstractHandler {
     @Value("${wistia.api_password}")
     private String apiPassword;
 
+    @Value("${callback.error_dir}")
+    private String errorDir;
+
     @Autowired
     private Http http;
 
@@ -62,6 +69,8 @@ public class WistiaControllerIT extends AbstractHandler {
 
     private Server callback;
 
+    private int httpStatus;
+
 
     //-- AbstractHandler overrides
     @Override
@@ -69,11 +78,16 @@ public class WistiaControllerIT extends AbstractHandler {
             throws IOException, ServletException {
         LOG.info("handling request: " + request);
 
-        callbackData = new ObjectMapper().readValue(request.getInputStream(), Map.class);
-
         httpServletResponse.addHeader("Content-Type", "application/json");
-        httpServletResponse.getWriter().write("{\"status\":\"OK\"}");
+        httpServletResponse.setStatus(httpStatus);
+
+        if (httpStatus == 200) {
+            callbackData = new ObjectMapper().readValue(request.getInputStream(), Map.class);
+            httpServletResponse.getWriter().write("{\"status\":\"OK\"}");
+        }
         request.setHandled(true);
+
+        FileUtils.deleteDirectory(new File(errorDir));
     }
 
     //-- Tests
@@ -87,6 +101,8 @@ public class WistiaControllerIT extends AbstractHandler {
         callback.start();
 
         callbackData = new HashMap<>();
+
+        httpStatus = 200;
     }
 
     @After
@@ -141,6 +157,9 @@ public class WistiaControllerIT extends AbstractHandler {
         assertThat(callbackData.get("event")).isEqualTo("video-uploaded");
         assertThat(callbackData).containsKey("x-timestamp");
         assertThat(callbackData).containsKey("x-hash");
+
+        /* Not error */
+        assertThat(new File(errorDir)).doesNotExist();
     }
 
     @Test
@@ -216,6 +235,9 @@ public class WistiaControllerIT extends AbstractHandler {
         assertThat(callbackData.get("event")).isEqualTo("video-uploaded");
         assertThat(callbackData).containsKey("x-timestamp");
         assertThat(callbackData).containsKey("x-hash");
+
+        /* Not error */
+        assertThat(new File(errorDir)).doesNotExist();
     }
 
     @Test
@@ -283,9 +305,65 @@ public class WistiaControllerIT extends AbstractHandler {
             deleteVideo(hashedId0);
         }
 
+        /* make sure callback sent */
+        assertThat(callbackData).isEmpty();
+
+        /* Not error */
+        assertThat(new File(errorDir)).doesNotExist();
+    }
+
+    @Test
+    public void testUpload_Callback_NotFound() throws Exception {
+        /* first upload */
+        this.httpStatus = 404;
+
+        final UploadVideoRequest request = new UploadVideoRequest();
+        request.setId(String.valueOf("12345"));
+        request.setProjectHashId(projectHashedKey);
+        request.setUrl("http://sample-videos.com/video/mp4/720/big_buck_bunny_720p_1mb.mp4");
+
+        // @formatter:off
+        String hashedId = given ()
+                .contentType(ContentType.JSON)
+                .content(request, ObjectMapperType.JACKSON_2)
+        .when()
+            .put("/api/wistia/video")
+        .then()
+            .log()
+                .all()
+            .statusCode(HttpStatus.SC_CREATED)
+            .body("name", is("big_buck_bunny_720p_1mb.mp4"))
+            .body("type", is("Video"))
+            .body("created", notNullValue())
+            .body("updated", notNullValue())
+        .extract()
+            .path("hashed_id")
+        ;
+        // @formatter:on
+
+        /* make sure video updated */
+        String videoUrl = "https://api.wistia.com/v1/medias/" + hashedId + ".json?api_password=" + apiPassword;
+        try {
+            Map video = http.get(new URI(videoUrl), Map.class);
+            assertThat(video.get("name")).isEqualTo("big_buck_bunny_720p_1mb.mp4");
+            assertThat(video.get("type")).isEqualTo("Video");
+            assertThat(video.get("hashed_id")).isEqualTo(hashedId);
+        } finally {
+            deleteVideo(hashedId);
+        }
 
         /* make sure callback sent */
         assertThat(callbackData).isEmpty();
+
+        /* Not error */
+        File dir = new File(errorDir);
+        assertThat(dir).exists();
+        assertThat(dir.listFiles()).hasSize(1);
+
+        String content = Joiner.on('\n').join(Files.readAllLines(dir.listFiles()[0].toPath()));
+        assertThat(content).contains("name=big_buck_bunny_720p_1mb.mp4");
+        assertThat(content).contains("id=" + request.getId());
+        assertThat(content).contains("hashed_id=" + hashedId);
     }
 
     //-- Private

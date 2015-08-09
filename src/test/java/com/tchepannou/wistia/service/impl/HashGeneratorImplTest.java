@@ -14,4 +14,9 @@ public class HashGeneratorImplTest {
 
         assertThat(result).isEqualTo("15eca3878dc5eba13729a48d0cb2db9a");
     }
+
+    @Test(expected = IllegalStateException.class)
+    public void testGenerate_BadEncoding() throws Exception {
+        new HashGeneratorImpl("???").generate("foo", Arrays.asList("ray", "sponsible"));
+    }
 }

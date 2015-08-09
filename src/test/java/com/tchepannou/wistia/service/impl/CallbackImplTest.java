@@ -190,6 +190,18 @@ public class CallbackImplTest {
         verify(spool, times(3)).dec();
     }
 
+    @Test
+    public void testResend_NoError () throws Exception {
+        // Given
+
+        // When
+        callback.resend();
+
+        // Then
+        verify(http, never()).postJson(any(URI.class), anyMap(), any(Class.class));
+        verify(spool, never()).dec();
+    }
+
     private File createErrorFile (String id, String name, String hashedId) throws Exception{
         Properties properties = new Properties();
         properties.put("id", id);
