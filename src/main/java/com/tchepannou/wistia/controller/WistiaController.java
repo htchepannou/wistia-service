@@ -41,4 +41,10 @@ public class WistiaController {
 
         return new ResponseEntity<>(video, HttpStatus.CREATED);
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/callback/resend")
+    @ApiOperation("Sesend all callbacks")
+    public void resend () throws IOException {
+        callback.resend();
+    }
 }
