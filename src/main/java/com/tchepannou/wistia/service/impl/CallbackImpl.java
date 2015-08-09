@@ -102,24 +102,19 @@ public class CallbackImpl implements Callback {
             Properties properties = new Properties();
             properties.load(in);
 
-            if (!file.delete()) {
-                LOG.warn("Unable to delete " + file);
-                return false;
-            }
+            LOG.info("Deleting " + file);
+            if (file.delete()) {
+                metrics.counter(METRIC_SPOOL_SIZE).dec();
 
-            /* update metrics */
-            LOG.info("Deleted: " + file);
-            metrics.counter(METRIC_SPOOL_SIZE).dec();
+                String id = properties.getProperty("id");
+                if (ids.add(id)) {
+                    Video video = new Video();
+                    video.setName(properties.getProperty("name"));
+                    video.setHashedId(properties.getProperty("hashed_id"));
 
-            /* sending callback */
-            String id = properties.getProperty("id");
-            if (ids.add(id)) {
-                Video video = new Video();
-                video.setName(properties.getProperty("name"));
-                video.setHashedId(properties.getProperty("hashed_id"));
-
-                LOG.info("Resending the notification for Video{}", id);
-                videoUploaded(id, video);
+                    LOG.info("Resending the notification for Video{}", id);
+                    videoUploaded(id, video);
+                }
             }
 
             return true;
@@ -155,14 +150,17 @@ public class CallbackImpl implements Callback {
 
             LOG.error("FAIL POST {} - {}", callbackUrl, params, e);
             metrics.counter(METRIC_ERRORS).inc();
-            onError(id, params, category);
-
+            try {
+                onError(id, params, category);
+            } catch (IOException ex){
+                LOG.warn("Unable to store error file", ex);
+            }
         } finally {
             timer.stop();
         }
     }
 
-    private void onError (String id, Map<String, String> params, Category category){
+    private void onError (String id, Map<String, String> params, Category category) throws IOException {
         String filename = String.format("%d-%s-%s", clock.millis(), category.name().toLowerCase(), id);
         File file = new File(errorDir, filename);
 
@@ -174,8 +172,6 @@ public class CallbackImpl implements Callback {
             properties.store(out, id);
 
             metrics.counter(METRIC_SPOOL_SIZE).inc();
-        } catch (IOException e){
-            LOG.error("Unable to store error into {}\nid={}\nparams={}", file, id, params, e);
         }
     }
 }
