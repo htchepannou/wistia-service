@@ -20,12 +20,15 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.time.Clock;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -82,8 +85,14 @@ public class CallbackImplTest {
 
         when(timer.time()).thenReturn(duration);
         when(metrics.timer(CallbackImpl.METRIC_DURATION)).thenReturn(timer);
-    }
 
+        File[] files = new File(errorDir).listFiles();
+        if (files != null){
+            for (File file : files){
+                file.delete();
+            }
+        }
+    }
 
     @Test
     public void testVideoUploaded() throws Exception {
@@ -157,4 +166,36 @@ public class CallbackImplTest {
         verify(duration).stop();
         verify(errors).inc();
         verify(spool).inc();
-    }}
+    }
+
+    @Test
+    public void testResend () throws Exception {
+        // Given
+        File f1 = createErrorFile("1", "v1", "v1");
+        File f2 = createErrorFile("2", "v2", "v2");
+        File f_1 = createErrorFile("1", "v1_", "v1_");
+
+        // When
+        callback.resend();
+
+        // Then
+        verify(http, times(2)).postJson(any(URI.class), anyMap(), any(Class.class));
+
+        assertThat(f1).doesNotExist();
+        assertThat(f2).doesNotExist();
+        assertThat(f_1).doesNotExist();
+    }
+
+    private File createErrorFile (String id, String name, String hashedId) throws Exception{
+        Properties properties = new Properties();
+        properties.put("id", id);
+        properties.put("hashed_id", hashedId);
+        properties.put("name", name);
+
+        File file = new File(errorDir, System.currentTimeMillis() + "_" + id);
+        try(OutputStream out = new FileOutputStream(file)){
+            properties.store(out, "");
+        }
+        return file;
+    }
+}

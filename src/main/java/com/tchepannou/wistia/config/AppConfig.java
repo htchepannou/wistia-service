@@ -13,6 +13,7 @@ import com.tchepannou.wistia.service.impl.WistiaClientImpl;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.IOException;
 import java.time.Clock;
@@ -55,5 +56,10 @@ public class AppConfig {
     @Bean
     public HealthIndicator wistiaHealthIndicator () throws IOException{
         return new WistiaHealthIndicator();
+    }
+
+    @Scheduled(cron = "0 0/15 * * * ?")
+    public void resendCallbacks () {
+        callback().resend();
     }
 }

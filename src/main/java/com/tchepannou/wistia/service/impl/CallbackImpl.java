@@ -13,14 +13,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.time.Clock;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 public class CallbackImpl implements Callback {
     //-- Enums
@@ -60,6 +67,7 @@ public class CallbackImpl implements Callback {
     //-- Constructor
     public CallbackImpl(){
     }
+
     protected CallbackImpl(String callbackUrl, String errorDir, String apiKey){
         this.callbackUrl = callbackUrl;
         this.errorDir = errorDir;
@@ -77,7 +85,49 @@ public class CallbackImpl implements Callback {
         post(id, params, Category.VIDEO);
     }
 
+    @Override
+    public void resend() {
+        List<File> files = getErrorFiles();
+        Set<String> ids = new HashSet<>();
+        for (File file : files){
+            try(InputStream in = new FileInputStream(file)){
+                /* load the data */
+                Properties properties = new Properties();
+                properties.load(in);
+
+                /* sending callback */
+                String id = properties.getProperty("id");
+                if (ids.add(id)) {
+                    Video video = new Video();
+                    video.setName(properties.getProperty("name"));
+                    video.setHashedId(properties.getProperty("hashed_id"));
+
+                    LOG.info("Resending the notification for Video{}", id);
+                    videoUploaded(id, video);
+                }
+
+                /* delete */
+                LOG.info("Deleting " + file);
+                file.delete();
+            } catch (IOException e){
+                LOG.warn("IO error", e);
+            }
+        }
+    }
+
     //-- Private
+    private List<File> getErrorFiles (){
+        File dir = new File(errorDir);
+        File[] afiles = dir.listFiles();
+        if (afiles == null){
+            return Collections.emptyList();
+        }
+
+        List<File> files = Arrays.asList(afiles);
+        Collections.sort(files, (f1, f2) -> f2.getName().compareTo(f1.getName()));
+        return files;
+    }
+
     private void post (String id, Map<String, String> params, Category category) {
         Timer.Context timer = metrics.timer(METRIC_DURATION).time();
         metrics.counter(METRIC_CALLS).inc();
