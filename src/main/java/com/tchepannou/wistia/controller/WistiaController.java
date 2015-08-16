@@ -43,7 +43,7 @@ public class WistiaController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/callback/resend")
-    @ApiOperation("Sesend all callbacks")
+    @ApiOperation("Resend all callbacks")
     public void resend () throws IOException {
         callback.resend();
     }
