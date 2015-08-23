@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,7 +41,6 @@ public class CallbackImpl implements Callback {
     public static final String METRIC_CALLS = "wistia.callback.calls";
     public static final String METRIC_ERRORS = "wistia.callback.errors";
     public static final String METRIC_DURATION = "wistia.callback.duration";
-    public static final String METRIC_SPOOL_SIZE = "wistia.callback.spool.size";
 
     @Value("${callback.url}")
     private String callbackUrl;
@@ -95,6 +95,14 @@ public class CallbackImpl implements Callback {
         }
     }
 
+    @Scheduled(cron = "0 0/15 * * * *")
+    public void resendCallbacks () throws IOException{
+        LOG.info("Resinding messages to callbacks");
+
+        resend();
+    }
+
+    //-- Private
     private boolean resend (File file, Set<String> ids) throws IOException {
         try(InputStream in = new FileInputStream(file)){
             /* load the data */
@@ -103,8 +111,6 @@ public class CallbackImpl implements Callback {
 
             LOG.info("Deleting " + file);
             if (file.delete()) {
-                metrics.counter(METRIC_SPOOL_SIZE).dec();
-
                 String id = properties.getProperty("id");
                 if (ids.add(id)) {
                     Video video = new Video();
@@ -120,7 +126,6 @@ public class CallbackImpl implements Callback {
         }
     }
 
-    //-- Private
     private List<File> getErrorFiles (){
         File dir = new File(errorDir);
         File[] afiles = dir.listFiles();
@@ -169,8 +174,6 @@ public class CallbackImpl implements Callback {
             Properties properties = new Properties();
             properties.putAll(params);
             properties.store(out, id);
-
-            metrics.counter(METRIC_SPOOL_SIZE).inc();
         }
     }
 }

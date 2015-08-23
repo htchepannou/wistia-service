@@ -1,5 +1,6 @@
 package com.tchepannou.wistia.config;
 
+import com.codahale.metrics.Counter;
 import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.Metric;
 import com.codahale.metrics.MetricRegistry;
@@ -15,6 +16,7 @@ import com.ryantenney.metrics.spring.config.annotation.MetricsConfigurerAdapter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -23,6 +25,8 @@ import java.util.concurrent.TimeUnit;
 @EnableMetrics
 public class MetricsConfig extends MetricsConfigurerAdapter {
     //-- Attributes
+    public static final String METRIC_SPOOL_SIZE = "wistia.callback.spool.size";
+
     @Value("${statsd.hostname:}")
     private String statsdHostname;
 
@@ -34,6 +38,10 @@ public class MetricsConfig extends MetricsConfigurerAdapter {
 
     @Value("${info.app.name}")
     private String applicationName;
+
+    @Value("${callback.error_dir}")
+    private String errorDir;
+
 
     //-- MetricsConfigurerAdapter
     @Override
@@ -59,6 +67,14 @@ public class MetricsConfig extends MetricsConfigurerAdapter {
                     .start(statsdPeriodSeconds, TimeUnit.SECONDS)
             ;
         }
+
+        registry.register(MetricRegistry.name(METRIC_SPOOL_SIZE), new Counter(){
+            @Override
+            public long getCount() {
+                File[] files = new File(errorDir).listFiles();
+                return files != null ? files.length : 0;
+            }
+        });
     }
 
     //-- Private

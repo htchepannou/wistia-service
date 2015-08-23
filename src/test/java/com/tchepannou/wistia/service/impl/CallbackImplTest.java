@@ -62,9 +62,6 @@ public class CallbackImplTest {
     private Counter errors;
 
     @Mock
-    private Counter spool;
-
-    @Mock
     Timer timer;
 
     @Mock
@@ -82,7 +79,6 @@ public class CallbackImplTest {
     public void setUp (){
         when(metrics.counter(CallbackImpl.METRIC_CALLS)).thenReturn(calls);
         when(metrics.counter(CallbackImpl.METRIC_ERRORS)).thenReturn(errors);
-        when(metrics.counter(CallbackImpl.METRIC_SPOOL_SIZE)).thenReturn(spool);
 
         when(timer.time()).thenReturn(duration);
         when(metrics.timer(CallbackImpl.METRIC_DURATION)).thenReturn(timer);
@@ -129,7 +125,6 @@ public class CallbackImplTest {
         verify(timer).time();
         verify(duration).stop();
         verify(errors, never()).inc();
-        verify(spool, never()).inc();
     }
 
     @Test
@@ -166,7 +161,6 @@ public class CallbackImplTest {
         verify(timer).time();
         verify(duration).stop();
         verify(errors).inc();
-        verify(spool).inc();
     }
 
     @Test
@@ -185,8 +179,6 @@ public class CallbackImplTest {
         assertThat(f1).doesNotExist();
         assertThat(f2).doesNotExist();
         assertThat(f_1).doesNotExist();
-
-        verify(spool, times(3)).dec();
     }
 
     @Test
@@ -198,7 +190,6 @@ public class CallbackImplTest {
 
         // Then
         verify(http, never()).postJson(anyString(), anyMap(), any(Class.class));
-        verify(spool, never()).dec();
     }
 
     @Test
@@ -211,7 +202,6 @@ public class CallbackImplTest {
 
         // Then
         verify(http, never()).postJson(anyString(), anyMap(), any(Class.class));
-        verify(spool, never()).dec();
     }
 
     private File createErrorFile (String id, String name, String hashedId) throws Exception{
